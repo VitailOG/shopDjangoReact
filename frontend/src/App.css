@@ -1,0 +1,49 @@
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+#cover {
+    background-size: cover;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+#cover-caption {
+    width: 100%;
+    position: relative;
+    top: -90px;
+    z-index: 1;
+}
+#cover-caption-registration{
+    width: 100%;
+    margin: 20px 0;
+}
+
+form:before {
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: -1;
+    border-radius: 10px;
+}
+
+.form-control::-webkit-input-placeholder {
+  text-align: center;
+}
+.form-control {
+  text-align: center;
+}
+
+
+#login__block{
+    background: #f2f2f2;
+    border-radius: 9px;
+}
