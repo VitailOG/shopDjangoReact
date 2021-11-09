@@ -104,6 +104,7 @@ class ProductAPI(ModelViewSet):
 
     @action(['get'], detail=False, url_path='home')
     def products_on_home_page(self, *args, **kwargs):
+        
         products = Product.objects.get_four_new_product().select_related('category')
         data = ProductListSerializers(products, many=True).data
         if self.request.user.is_authenticated:

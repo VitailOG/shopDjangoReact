@@ -1,0 +1,11 @@
+shopDjangoReact/venv
+shopDjangoReact/static
+shopDjangoReact/.env
+shopDjangoReact/.idea
+shopDjangoReact/__pycache__
+shopDjangoReact/task.txt
+
+frontend/build
+frontend/node_modules
+frontend/public
+frontend/README.md
