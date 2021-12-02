@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'djoser',
     'channels',
-
+    'django_celery_beat',
+    'drf_yasg',
+    
     'shop.apps.ShopConfig',
     'customer.apps.CustomerConfig',
     'order.apps.OrderConfig',
@@ -57,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 
     'shopDjangoReact.middleware.CsrfDisableCheckMiddleware',
-
+    
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -92,6 +94,7 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -103,13 +106,11 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
 ]
+
 CORS_ALLOW_CREDENTIALS = True
 
-
-WSGI_APPLICATION = 'shopDjangoReact.wsgi.application'
+# WSGI_APPLICATION = 'shopDjangoReact.wsgi.application'
 ASGI_APPLICATION = 'shopDjangoReact.asgi.application'
-
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -125,12 +126,14 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -160,7 +163,7 @@ REST_USE_JWT = True
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=2),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=100),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
@@ -226,10 +229,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
-# STATICFILES_DIRS = (
-#     (BASE_DIR / 'frontend/build/static'),
-# )
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -247,7 +246,6 @@ INTERNAL_IPS = [
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/'
 CELERY_TIMEZONE = "Australia/Tasmania"

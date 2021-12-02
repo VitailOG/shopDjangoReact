@@ -3,15 +3,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Menu from "./inc/menu";
 import ModelOrder from "./inc/modelOrder";
 import { Table } from "react-bootstrap";
-import {getAllOrdersCustomer} from "../router/urls";
-import $axios from "../../http";
-import {useSelector} from "react-redux";
-import {profileAPI} from "../../http/api/auth";
+import { useSelector } from "react-redux";
+import { profileAPI } from "../../http/api/auth";
 
 
-function Profile(props) {
-
-    props.setCurrentUrl(window.location.href)
+function Profile() {
 
     const [orders, setOrders] = useState([])
     const [obj, setObj] = useState({})
@@ -30,12 +26,12 @@ function Profile(props) {
         })
     }, [ordering]);
 
-    const openModel = (order) =>{
+    const openModel = (order) => {
         setObj(order)
         handleShow()
     }
 
-    let sortTable = (e) =>{
+    let sortTable = (e) => {
         setDescending(!descending)
         { descending ? setOrdering(e) : setOrdering('-' + e) }
     }
@@ -44,7 +40,7 @@ function Profile(props) {
         <div className="container mt-4">
             <div className="row justify-content-start">
                 <div className="col-3">
-                    <Menu/>
+                    <Menu />
                 </div>
                 <div className="col-8">
                     <h2 style={{ "display": "block", "marginBottom": "25px" }}>Замовлення - {username}</h2>
@@ -52,46 +48,46 @@ function Profile(props) {
                         <thead>
                             <tr>
                                 <th width='1' onClick={() => sortTable('id')}
-                                className="text-center" style={{width:"50px", cursor:"pointer"}}>Номер</th>
+                                    className="text-center" style={{ width: "50px", cursor: "pointer" }}>Номер</th>
                                 <th width='1'
-                                    className="text-center" style={{width:"50px"}}>Дата замовлення</th>
+                                    className="text-center" style={{ width: "50px" }}>Дата замовлення</th>
                                 <th width='1' onClick={() => sortTable('cart__all_price')}
-                                    className="text-center" style={{width:"50px", cursor:"pointer"}}>Сума замовлень</th>
-                                <th width='1' className="text-center" style={{width:"50px"}}>Детальніше</th>
+                                    className="text-center" style={{ width: "50px", cursor: "pointer" }}>Сума замовлень</th>
+                                <th width='1' className="text-center" style={{ width: "50px" }}>Детальніше</th>
                             </tr>
                         </thead>
                         <tbody>
-                        {orders && orders.map(e => (
-                            <tr key={e.id}>
-                                <td style={{ 'textAlign': 'center' }}>{e.id}</td>
-                                <td style={{ 'textAlign': 'center' }}>{e.order_date}</td>
-                                {
-                                    e.price_with_promo_code !== null
-                                        ?
-                                        <td style={{ 'textAlign': 'center' }}>{e.price_with_promo_code} грн.</td>
-                                        :
-                                        e.cart.discount === "0.00"
-                                        ?
-                                            <td style={{ 'textAlign': 'center' }}>{e.cart.all_price} грн.</td>
-                                        :
-                                            <td style={{ 'textAlign': 'center' }}>{e.cart.discount} грн.</td>
-                                }
-                                <td style={{ 'textAlign': 'center' }}>
-                                    <a className="btn btn-info text-white"
-                                       onClick={() => openModel(e)}
-                                    >Детальніше</a>
-                                </td>
-                            </tr>
-                        ))}
+                            {orders && orders.map(e => (
+                                <tr key={e.id}>
+                                    <td style={{ 'textAlign': 'center' }}>{e.id}</td>
+                                    <td style={{ 'textAlign': 'center' }}>{e.order_date}</td>
+                                    {
+                                        e.price_with_promo_code !== null
+                                            ?
+                                            <td style={{ 'textAlign': 'center' }}>{e.price_with_promo_code} грн.</td>
+                                            :
+                                            e.cart.discount === "0.00"
+                                                ?
+                                                <td style={{ 'textAlign': 'center' }}>{e.cart.all_price} грн.</td>
+                                                :
+                                                <td style={{ 'textAlign': 'center' }}>{e.cart.discount} грн.</td>
+                                    }
+                                    <td style={{ 'textAlign': 'center' }}>
+                                        <a className="btn btn-info text-white"
+                                            onClick={() => openModel(e)}
+                                        >Детальніше</a>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </Table>
                 </div>
             </div>
             <ModelOrder handleShow={handleShow}
-                        handleClose={handleClose}
-                        show={show}
-                        obj={obj}
-                        />
+                handleClose={handleClose}
+                show={show}
+                obj={obj}
+            />
 
         </div>
     );

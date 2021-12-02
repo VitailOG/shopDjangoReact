@@ -1,12 +1,15 @@
 import { createStore, combineReducers } from 'redux';
-import {loadState, saveState} from "./localStorage";
-import {authReducer} from "./reducers/auth";
-import {filterProductReducer} from "./reducers/filterProduct";
+import { loadState, saveState } from "./localStorage";
 
+// reducers
+import { authReducer } from "./reducers/auth";
+import { filterProductReducer } from "./reducers/filterProduct";
+import { reminderReducer } from './reducers/reminder';
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    filterProduct: filterProductReducer
+    filterProduct: filterProductReducer,
+    reminder: reminderReducer
 })
 
 const persistedStore = loadState();

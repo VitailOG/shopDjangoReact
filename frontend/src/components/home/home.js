@@ -4,13 +4,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Cart from "./inc/cart";
 import HeaderContent from "./inc/headerContent";
 import LoaderProduct from "./inc/loaderProduct";
-import {useSelector} from "react-redux";
-import {productOnHomePageAPI} from "../../http/api/product";
-import {useAddProductToCart} from "../../hooks/useAddProductToCart";
-import {useAddInPending} from "../../hooks/useAddProductInPending";
+import { useSelector } from "react-redux";
+import { productOnHomePageAPI } from "../../http/api/product";
+import { useAddProductToCart } from "../../hooks/useAddProductToCart";
+import { useAddInPending } from "../../hooks/useAddProductInPending";
 
-function Home(props) {
-    props.setCurrentUrl(window.location.href)
+function Home() {
 
     const [products, setProducts] = useState([])
     const [load, setLoad] = useState(true)
@@ -20,45 +19,45 @@ function Home(props) {
     const addProductToCartCustomer = useAddProductToCart()
     const addProductInPending = useAddInPending()
 
-    useEffect(()  => {
+    useEffect(() => {
         productOnHomePageAPI().then(response => {
             setProducts(response)
             setLoad(false)
         })
     }, [isAuth]);
 
-    function addToCart(obj){
+    function addToCart(obj) {
         addProductToCartCustomer.addToCart(obj, products, setProducts)
     }
 
-    let addInPending = (slug_product) =>{
+    let addInPending = (slug_product) => {
         addProductInPending.addInPending(slug_product)
     }
 
     return (
         <div className="App">
-            <HeaderContent/>
+            <HeaderContent />
             <section className="py-5">
-            <div className="container px-4 px-lg-5 mt-5">
+                <div className="container px-4 px-lg-5 mt-5">
 
-                {
-                    load ?
-                    <LoaderProduct/>
-                    :
-                    <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                        {products.map(e =>(
-                            <Cart data={e}
-                                  addToCart={addToCart}
-                                  addInPending={addInPending}
-                                  idProduct={addProductToCartCustomer.idProduct}
-                                  isAuth={isAuth}
-                            />
-                        ))}
-                    </div>
-                }
+                    {
+                        load ?
+                            <LoaderProduct />
+                            :
+                            <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                                {products.map(e => (
+                                    <Cart data={e}
+                                        addToCart={addToCart}
+                                        addInPending={addInPending}
+                                        idProduct={addProductToCartCustomer.idProduct}
+                                        isAuth={isAuth}
+                                    />
+                                ))}
+                            </div>
+                    }
 
-            </div>
-        </section>
+                </div>
+            </section>
         </div>
     );
 }

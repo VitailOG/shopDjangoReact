@@ -1,20 +1,22 @@
-import {useState} from "react";
-import {addProductToCartAPI} from "../http/api/cart";
-import {mutate} from "swr";
-import {cartCustomer} from "../components/router/urls";
-import {useChangeProductInCart} from "./useChangeProductInCart";
+import { useState } from "react";
+import { addProductToCartAPI } from "../http/api/cart";
+import { mutate } from "swr";
+import { cartCustomer } from "../components/router/urls";
+import { useChangeProductInCart } from "./useChangeProductInCart";
 
 
-export function useAddProductToCart(){
+export function useAddProductToCart(changeLists = true) {
     const [idProduct, setIdProduct] = useState([])
-    const updateProduct = useChangeProductInCart()
+    const updateProduct = useChangeProductInCart(false)
 
-    const addToCart = (obj, products, setProducts) =>{
+    const addToCart = (obj, products, setProducts) => {
         setIdProduct(idProduct => [...idProduct, obj.id])
         addProductToCartAPI(obj.id).then(() => {
-            updateProduct.updateFieldProductInCart(obj, products, setProducts)
+            if (changeLists) {
+                updateProduct.updateFieldProductInCart(obj, products, setProducts)
+            }
             mutate(cartCustomer)
-        }).catch(() =>{
+        }).catch(() => {
             console.log('error')
         })
     }

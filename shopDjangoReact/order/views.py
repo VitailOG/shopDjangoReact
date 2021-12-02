@@ -4,10 +4,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from shop.services.cart import get_customer_cart
+from shop.services.cart import BaseCartService
 from .models import Order
 from .serializers import OrderSerializers
 from .services.order import CreateOrderSevice
+from .tasks import send_email
 
 
 class OrderAPI(ModelViewSet):
@@ -17,9 +18,10 @@ class OrderAPI(ModelViewSet):
 
     @action(methods=['post'], detail=False)
     def order(self, *args, **kwargs):
-        cart = get_customer_cart(self.request.user)
+        cart = BaseCartService().get_customer_cart(self.request.user)
         try:
             CreateOrderSevice(self.request.user, cart, **self.request.data)()
+            # send_email.delay(self.request.user)
         except ValueError:
             error_message = "Промокода не існує або термін його дії завершився =("
             return Response({"error": error_message})
@@ -29,10 +31,7 @@ class OrderAPI(ModelViewSet):
     def get_all_order_customer(self, *args, **kwargs):
         self.filter_backends = (OrderingFilter,)
         self.ordering_fields = ('id', 'cart__all_price')
-        orders = Order.objects.exclude(cart__all_product=0)\
-            .prefetch_related('cart__products__product')\
-            .select_related('cart')\
-            .filter(customer=self.request.user)
+        orders = Order.objects.get_all_order_customer(customer=self.request.user)
         queryset = self.filter_queryset(orders)
         data = OrderSerializers(queryset, many=True).data
         return Response(data)

@@ -5,35 +5,15 @@ import Paginator from "./inc/paginator";
 import LoaderProduct from "../home/inc/loaderProduct";
 import { Link } from "react-router-dom";
 import Specification from "./inc/specification";
-import { cartCustomer } from "../router/urls";
-import { mutate } from "swr";
 import { useDispatch, useSelector } from "react-redux";
 import { limitAction, offsetAction, removeSpecAction, sortAction } from "../../store/actionCreators";
-import { addProductToCartAPI } from "../../http/api/cart";
-import { useChangeProductInCart } from "../../hooks/useChangeProductInCart";
 import { categoriesProductsAPI } from "../../http/api/product";
 import { useAddProductToCart } from "../../hooks/useAddProductToCart";
 import { useAddInPending } from "../../hooks/useAddProductInPending";
+import { sortParams, nameCategory, limitNumbers } from "../../core/config"
 
 
-function DetailCategory({ match, setCurrentUrl }) {
-    setCurrentUrl(window.location.href)
-
-    const sortParams = {
-        "-id": "Нові",
-        "id": "Старіші",
-        "price": "Від дешевих до дорогих",
-        "-price": "Від дорогих до дешевих"
-    }
-
-    const nameCategory = {
-        'phone': 'Телефони',
-        'tablet': 'Планшети',
-        'pc': 'Копм`ютери',
-        'notebook': 'Нотбуки',
-    }
-
-    const limitNumbers = ['3', '6', '9'];
+function DetailCategory({ match }) {
 
     const slug = match.params.slug;
 

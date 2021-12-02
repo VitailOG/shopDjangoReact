@@ -1,6 +1,6 @@
 import $axios from "../index";
 import { categoryUrl, homeListProduct, reminder } from "../../components/router/urls";
-import { getParams } from "../../utils";
+import { getParams } from "../../core/utils";
 import axios from "axios";
 
 export function productOnHomePageAPI() {
@@ -36,7 +36,7 @@ export function categoriesProductsAPI(slug, limit, offset, sort, search, minPric
     })
 }
 
-export function categoryDetailAPI(slug) {
+export function productDetailAPI(slug) {
     return $axios({
         method: "GET",
         url: `/shop/product/${slug}/`
@@ -63,4 +63,3 @@ export function reminderCountAPI() {
         url: reminder
     }).then(response => response.data)
 }
-

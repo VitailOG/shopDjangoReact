@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Link, useHistory} from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import CartNavbar from "./inc/cartNavbar";
-import {Badge} from "react-bootstrap";
-import {useSelector, useDispatch} from "react-redux";
+import CustomBadge from "./inc/customBadge"
+import { useSelector, useDispatch } from "react-redux";
 import {
     clearSpecAction,
     limitAction,
@@ -11,34 +11,66 @@ import {
     maxPriceAction, minPriceAction,
     offsetAction,
     searchAction,
-    sortAction
+    sortAction,
+    countReminderCustomer,
+    updateCountReminderCustomer
 } from "../../store/actionCreators";
-import {categoriesAPI, reminderCountAPI} from "../../http/api/product";
+import { categoriesAPI, reminderCountAPI } from "../../http/api/product";
 
-function Navbar({ currentUrl }) {
+
+function Navbar() {
+
+    const socket = useRef();
+
     const [categories, setCategories] = useState([])
-
-    const [reminderCount, setReminderCount] = useState(0)
 
     const history = useHistory();
 
     const dispatch = useDispatch()
 
+    const username = useSelector(state => state.auth.username)
     const isAuth = useSelector(state => state.auth.isAuth)
+    const reminderCount = useSelector(state => state.reminder.countReminder)
 
-    useEffect(()  => {
+    useEffect(() => {
+        reminderCountAPI().then(response => {
+            dispatch(countReminderCustomer(response.reminder_count))
+        })
+    }, []);
+
+    useEffect(() => {
+        if (isAuth) {
+            socket.current = new WebSocket(`ws://127.0.0.1:8000/${username}/?token=${localStorage.getItem('token')}`)
+
+            socket.current.onopen = () => {
+                console.log('start')
+            }
+
+            socket.current.onmessage = (event) => {
+                let data = JSON.parse(event.data)
+                let num = data['data'];
+                // setReminderCount(reminderCount => reminderCount + num)
+                dispatch(updateCountReminderCustomer(num))
+            }
+
+            socket.current.onclose = () => {
+                console.log('close')
+            }
+
+            socket.current.onerror = () => {
+                console.log('error')
+            }
+
+        }
+    }, [isAuth])
+
+    useEffect(() => {
         categoriesAPI().then(response => {
             setCategories(response)
         })
     }, []);
 
-    useEffect(()  => {
-        reminderCountAPI().then(response => {
-            setReminderCount(response.reminder_count)
-        })
-    }, [currentUrl]);
-
-    let clearFilters = () =>{
+    let clearFilters = () => {
         dispatch(offsetAction(0, 1))
         dispatch(limitAction(3))
         dispatch(sortAction('-id'))
@@ -48,7 +80,7 @@ function Navbar({ currentUrl }) {
         dispatch(clearSpecAction())
     }
 
-    let exit = () =>{
+    let exit = () => {
         dispatch(logoutAction())
         localStorage.removeItem('token')
         localStorage.removeItem('refresh')
@@ -60,26 +92,26 @@ function Navbar({ currentUrl }) {
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container px-4 px-lg-5">
                     <Link className="navbar-brand"
-                          to={{ pathname: `/`, fromDashboard: false }}>E-commerce</Link>
+                        to={{ pathname: `/`, fromDashboard: false }}>E-commerce</Link>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                             <li className="nav-item dropdown">
                                 <a className="nav-link dropdown-toggle active" id="navbarDropdown" role="button"
-                                   data-bs-toggle="dropdown" aria-expanded="false">Категорії
+                                    data-bs-toggle="dropdown" aria-expanded="false">Категорії
                                 </a>
                                 <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    {categories.map(e =>(
-                                       <li key={e.id}>
+                                    {categories.map(e => (
+                                        <li key={e.id}>
                                             <Link className="dropdown-item"
-                                                  to={{ pathname: `/category/${e.slug}`, fromDashboard: false }}
-                                                  onClick={() => clearFilters()}
+                                                to={{ pathname: `/category/${e.slug}`, fromDashboard: false }}
+                                                onClick={() => clearFilters()}
                                             >{e.name}</Link>
-                                       </li>
+                                        </li>
                                     ))}
                                 </ul>
                             </li>
@@ -89,11 +121,11 @@ function Navbar({ currentUrl }) {
                                     <React.Fragment>
                                         <li className="nav-item">
                                             <Link className="nav-link"
-                                                  to={{pathname: `/login/`, fromDashboard: false}}>Авторизація</Link>
+                                                to={{ pathname: `/login/`, fromDashboard: false }}>Авторизація</Link>
                                         </li>
                                         <li className="nav-item">
                                             <Link className="nav-link"
-                                                  to={{pathname: `/registration/`, fromDashboard: false}}>Реєстрація</Link>
+                                                to={{ pathname: `/registration/`, fromDashboard: false }}>Реєстрація</Link>
 
                                         </li>
                                     </React.Fragment>
@@ -101,18 +133,13 @@ function Navbar({ currentUrl }) {
                                     <React.Fragment>
                                         <li className="nav-item">
                                             <Link className="nav-link"
-                                                  to={{pathname: `/profile/`, fromDashboard: false}}>
-                                                Профіль {
-                                                reminderCount > 0 ?
-                                                    <Badge className="badge bg-success">{ reminderCount }</Badge>
-                                                    :
-                                                    ""
-                                            }
+                                                to={{ pathname: `/profile/`, fromDashboard: false }}>
+                                                Профіль <CustomBadge reminderCount={reminderCount} />
                                             </Link>
                                         </li>
                                         <li className="nav-item">
                                             <button className="btn btn-outline-secondary"
-                                                    onClick={() => exit()}>Вихід
+                                                onClick={() => exit()}>Вихід
                                             </button>
                                         </li>
                                     </React.Fragment>
@@ -123,8 +150,8 @@ function Navbar({ currentUrl }) {
                         {
                             isAuth ?
                                 <React.Fragment>
-                                    <Link style={{'textDecoration': 'none'}}
-                                          to={{pathname: `/cart/`, fromDashboard: false}}><CartNavbar/>
+                                    <Link style={{ 'textDecoration': 'none' }}
+                                        to={{ pathname: `/cart/`, fromDashboard: false }}><CartNavbar />
                                     </Link>
                                 </React.Fragment>
                                 :

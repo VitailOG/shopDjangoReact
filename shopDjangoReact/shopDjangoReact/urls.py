@@ -5,8 +5,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Pastebin API')
 
 urlpatterns = [
+    path('docs/', schema_view),
     path('admin/', admin.site.urls),
     path('grappelli/', include('grappelli.urls')),
     path('__debug__/', include(debug_toolbar.urls)),

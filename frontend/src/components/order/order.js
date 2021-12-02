@@ -1,17 +1,15 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as yup from "yup";
-import {Formik, Field} from "formik";
-import {useHistory} from "react-router-dom";
-import {mutate} from "swr";
+import { Formik, Field } from "formik";
+import { useHistory } from "react-router-dom";
+import { mutate } from "swr";
 import Toast from 'react-bootstrap/Toast'
-import {Col, Form, InputGroup, Button} from "react-bootstrap";
-import {cartCustomer} from "../router/urls";
+import { Col, Form, InputGroup, Button } from "react-bootstrap";
+import { cartCustomer } from "../router/urls";
 import $axios from "../../http";
 
-function Order(props) {
-
-    props.setCurrentUrl(window.location.href)
+function Order() {
 
     const history = useHistory();
     const [error, setError] = useState('')
@@ -33,10 +31,10 @@ function Order(props) {
         console.log(data)
         $axios.post('/order/make-order/order/', data).then(res => {
             console.log(res.data)
-            if(res.data.error){
+            if (res.data.error) {
                 setError(res.data.error)
                 setShow(true)
-            }else if(res.data.success){
+            } else if (res.data.success) {
                 mutate(cartCustomer)
                 history.push("/")
             }
@@ -52,13 +50,13 @@ function Order(props) {
                     <div className="container">
                         <div className="row text-white">
                             <div className="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form p-4"
-                                 id="login__block">
+                                id="login__block">
 
-                            <Toast show={show} positive="top-left" onClose={() => setShow(false)}>
-                                <Toast.Header>
-                                    <strong className="me-auto">{error}</strong>
-                                </Toast.Header>
-                            </Toast>
+                                <Toast show={show} positive="top-left" onClose={() => setShow(false)}>
+                                    <Toast.Header>
+                                        <strong className="me-auto">{error}</strong>
+                                    </Toast.Header>
+                                </Toast>
 
                                 <h2 className="display-5 py-2 text-muted">Оформлення замовлення</h2>
 
@@ -76,19 +74,19 @@ function Order(props) {
                                         }}
                                     >
                                         {({
-                                              handleSubmit,
-                                              handleChange,
-                                              handleBlur,
-                                              values,
-                                              touched,
-                                              isValid,
-                                              errors,
-                                              dirty
-                                          }) => (
+                                            handleSubmit,
+                                            handleChange,
+                                            handleBlur,
+                                            values,
+                                            touched,
+                                            isValid,
+                                            errors,
+                                            dirty
+                                        }) => (
                                             <Form noValidate onSubmit={handleSubmit} className="justify-content-center">
 
                                                 <Form.Group as={Col} md="9" className="mx-auto"
-                                                            controlId="validationFormikFirstName">
+                                                    controlId="validationFormikFirstName">
                                                     <InputGroup hasValidation>
                                                         <InputGroup.Text id="inputGroupPrepend">
                                                             <strong>N</strong>
@@ -108,9 +106,9 @@ function Order(props) {
                                                     </InputGroup>
                                                 </Form.Group>
 
-                                                <br/>
+                                                <br />
                                                 <Form.Group as={Col} md="9" className="mx-auto"
-                                                            controlId="validationFormikLastName">
+                                                    controlId="validationFormikLastName">
                                                     <InputGroup hasValidation>
                                                         <InputGroup.Text id="inputGroupPrepend">
                                                             <strong>L</strong>
@@ -130,9 +128,9 @@ function Order(props) {
                                                     </InputGroup>
                                                 </Form.Group>
 
-                                                <br/>
+                                                <br />
                                                 <Form.Group as={Col} md="9" className="mx-auto"
-                                                            controlId="validationFormikPhone">
+                                                    controlId="validationFormikPhone">
                                                     <InputGroup hasValidation>
                                                         <InputGroup.Text id="inputGroupPrepend">
                                                             <strong>&#9990;</strong>
@@ -152,9 +150,9 @@ function Order(props) {
                                                     </InputGroup>
                                                 </Form.Group>
 
-                                                <br/>
+                                                <br />
                                                 <Form.Group as={Col} md="9" className="mx-auto"
-                                                            controlId="validationFormikAddress">
+                                                    controlId="validationFormikAddress">
                                                     <InputGroup hasValidation>
                                                         <InputGroup.Text id="inputGroupPrepend">
                                                             <strong>A</strong>
@@ -174,9 +172,9 @@ function Order(props) {
                                                     </InputGroup>
                                                 </Form.Group>
 
-                                                <br/>
+                                                <br />
                                                 <Form.Group as={Col} md="9" className="mx-auto"
-                                                            controlId="validationFormikDate">
+                                                    controlId="validationFormikDate">
                                                     <InputGroup hasValidation>
                                                         <Form.Control
                                                             type="date"
@@ -193,18 +191,18 @@ function Order(props) {
                                                 </Form.Group>
 
 
-                                                <br/>
+                                                <br />
                                                 <Form.Group as={Col} md="9" className="mx-auto"
-                                                            controlId="validationFormikTypeDelivery">
+                                                    controlId="validationFormikTypeDelivery">
 
                                                     <InputGroup hasValidation>
 
                                                         <Field name="typeDelivery"
-                                                               className="form-select"
-                                                               as="select"
-                                                               aria-describedby="inputGroupPrepend"
-                                                               value={values.typeDelivery}
-                                                               onChange={handleChange}
+                                                            className="form-select"
+                                                            as="select"
+                                                            aria-describedby="inputGroupPrepend"
+                                                            value={values.typeDelivery}
+                                                            onChange={handleChange}
                                                         >
                                                             <option value="Доставка">Доставка</option>
                                                             <option value="Самовивоз">Самовивоз</option>
@@ -216,10 +214,10 @@ function Order(props) {
                                                     </InputGroup>
                                                 </Form.Group>
 
-                                                <br/>
+                                                <br />
 
                                                 <Form.Group as={Col} md="9" className="mx-auto"
-                                                            controlId="validationFormikPromoCode">
+                                                    controlId="validationFormikPromoCode">
                                                     <InputGroup hasValidation>
                                                         <InputGroup.Text id="inputGroupPrepend">
                                                             <strong>P</strong>
@@ -240,11 +238,11 @@ function Order(props) {
                                                 </Form.Group>
 
 
-                                                <br/>
+                                                <br />
                                                 <button type="submit"
-                                                        disabled={!isValid || !dirty}
-                                                        onClick={() => console.log('add')}
-                                                        className="btn btn-primary btn-lg">Оформити замовлення
+                                                    disabled={!isValid || !dirty}
+                                                    onClick={() => console.log('add')}
+                                                    className="btn btn-primary btn-lg">Оформити замовлення
                                                 </button>
                                             </Form>
                                         )}
@@ -256,7 +254,7 @@ function Order(props) {
                 </div>
             </section>
 
-    </div>
+        </div>
     );
 }
 

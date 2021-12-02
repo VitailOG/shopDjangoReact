@@ -58,12 +58,21 @@ class CreateOrderSevice:
             _.product.count_on_stock -= _.count
             _.product.save()
 
-    @staticmethod
-    def _send_message_after_make_order(customer: Customer) -> None:
-        send_mail(
-            'Вітаємо з оформленим замовлення',
-            'Менеджер з вами зв`яжеться',
-            'vzaharkiv28@gmail.com',
-            [customer.email],
-            fail_silently=False
-        )
+    
+def send_message_after_make_order(customer: Customer) -> None:
+    send_mail(
+        'Вітаємо з оформленим замовлення',
+        'Менеджер з вами зв`яжеться',
+        'vzaharkiv28@gmail.com',
+        [customer.email],
+        fail_silently=False
+    )
+
+def new_promo_code(customer: Customer, instance: PromoCode) -> None:
+    send_mail(
+        'Вітаємо з новим промокодом',
+        f'За промокодом {instance.name} - {instance.interest}',
+        'vzaharkiv28@gmail.com',
+        [customer.email],
+        fail_silently=False
+    )

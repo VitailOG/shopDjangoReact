@@ -8,6 +8,7 @@ from django.db import models
 
 from customer.models import Customer
 from shop.models import Cart
+from .managers import OrderManager
 
 
 class Order(models.Model):
@@ -52,6 +53,7 @@ class Order(models.Model):
         Cart,
         on_delete=models.CASCADE,
         verbose_name='Корзина',
+        related_name="order_cart",
         blank=True,
         null=True
     )
@@ -69,7 +71,9 @@ class Order(models.Model):
         null=True,
         verbose_name="Сума замовлення із можливим промокодом"
     )
-
+    
+    objects = OrderManager()
+    
     def __str__(self):
         return str(self.id)
 

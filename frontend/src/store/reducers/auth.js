@@ -1,16 +1,16 @@
-import {LOGIN, EXIT} from "../actions";
+import { LOGIN, EXIT } from "../actions";
 
 const initialState = {
     username: '',
-    isAuth: false,
+    isAuth: false
 }
 
-export function authReducer(state=initialState, action){
+export function authReducer(state = initialState, action) {
     switch (action.type) {
         case LOGIN:
-            return {...state, username: action.payload, isAuth: true}
+            return { ...state, username: action.payload, isAuth: true }
         case EXIT:
-            return {...state, username: '', isAuth: false}
+            return { ...state, username: '', isAuth: false }
         default:
             return state
     }

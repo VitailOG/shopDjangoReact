@@ -12,3 +12,9 @@ export const OFFSET = "OFFSET";
 export const ADD_SPEC = "ADD_SPEC";
 export const REMOVE_SPEC = "REMOVE_SPEC";
 export const CLEAR_SPEC = "CLEAR_SPEC";
+
+// reminder
+export const REMINDER = "REMINDER";
+export const UPDATE_REMINDER = "UPDATE_REMINDER";
+export const CLEAR_REMINDER = "CLEAR_REMINDER";
+

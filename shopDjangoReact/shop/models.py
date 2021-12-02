@@ -5,14 +5,12 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from customer.models import Customer
-from PIL import Image
-from urllib.request import urlopen 
-
-class ProductManager(models.Manager):
-
-    def get_four_new_product(self):
-        return super().get_queryset().order_by('-id')[:4]
-
+from .managers.cart import CartManager
+from .managers.product import ProductManager
+from .managers.cart_product import CartProductManager
+from .managers.pending import PendingManager
+from .managers.specification_product import SpecificationProductManager
+from .managers.reminder import ReminderManager
 
 class Category(models.Model):
     """ Categories products
@@ -21,9 +19,8 @@ class Category(models.Model):
         max_length=255,
         verbose_name="Ім'я"
     )
-    slug = models.SlugField(
-        unique=True
-    )
+    
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.slug
@@ -36,6 +33,11 @@ class Category(models.Model):
 class Product(models.Model):
     """ Product
     """
+    status_on_stock = models.BooleanField(
+        verbose_name="Статус на відсутність на складі",
+        default=False
+    )
+    
     category = models.ForeignKey(
         Category,
         verbose_name="Категорії",
@@ -50,12 +52,6 @@ class Product(models.Model):
     )
     
     main_img = models.URLField(
-        null=True,
-        blank=True
-    )
-    
-    img = models.ImageField(
-        upload_to='product/',
         null=True,
         blank=True
     )
@@ -90,13 +86,6 @@ class Product(models.Model):
     def __str__(self):
         return f'Продукт {self.title} Категорії {self.category.name}'
 
-    def save(self, *args, **kwargs):
-        #image = Image.open(urlopen(self.main_img))
-        #image.show()
-        #size = (251, 212)
-        #self.img = image
-        super().save(*args, **kwargs)
-
 
 class SpecificationProduct(models.Model):
     """ Specification product
@@ -106,13 +95,13 @@ class SpecificationProduct(models.Model):
         on_delete=models.CASCADE,
         related_name="specification"
     )
-    name_spec = models.CharField(
-        max_length=100
-    )
-    value_spec = models.CharField(
-        max_length=100
-    )
-
+    
+    name_spec = models.CharField(max_length=100)
+    
+    value_spec = models.CharField(max_length=100)
+    
+    objects = SpecificationProductManager()
+    
     class Meta:
         verbose_name = 'Специфікація'
         verbose_name_plural = 'Специфікації'
@@ -143,12 +132,14 @@ class ShortImgProduct(models.Model):
 class CartProduct(models.Model):
     """ Cart product
     """
+    
     cart = models.ForeignKey(
         'Cart',
         on_delete=models.CASCADE,
         verbose_name="Корзина",
         related_name="related_products"
     )
+    
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
@@ -156,9 +147,9 @@ class CartProduct(models.Model):
         blank=True,
         related_name='product'
     )
-    count = models.PositiveIntegerField(
-        default=1
-    )
+    
+    count = models.PositiveIntegerField(default=1)
+    
     all_price = models.DecimalField(
         max_digits=9,
         default=0,
@@ -166,6 +157,8 @@ class CartProduct(models.Model):
         verbose_name="Вся сума"
     )
 
+    objects = CartProductManager()
+    
     def __str__(self):
         return f"{self.id} - {self.product.id} - {self.product.count_on_stock}"
 
@@ -186,16 +179,19 @@ class Cart(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Покупець"
     )
+    
     products = models.ManyToManyField(
         CartProduct,
         blank=True,
         related_name="related_cart"
     )
+    
     all_product = models.PositiveIntegerField(
         default=0,
         null=True,
         blank=True
     )
+    
     all_price = models.DecimalField(
         max_digits=9,
         decimal_places=2,
@@ -203,16 +199,18 @@ class Cart(models.Model):
         null=True,
         verbose_name="Вся сума"
     )
+
     discount = models.DecimalField(
         max_digits=9,
         decimal_places=2,
         default=0,
         verbose_name="Сума із знижкою"
     )
-    in_order = models.BooleanField(
-        default=False
-    )
-
+    
+    in_order = models.BooleanField(default=False)
+    
+    objects = CartManager()
+    
     def __str__(self):
         return f"{self.customer} - {self.id}"
 
@@ -230,14 +228,15 @@ class Review(MPTTModel):
         null=True,
         blank=True
     )
-    review = models.TextField(
-        verbose_name="Відгук"
-    )
+    
+    review = models.TextField(verbose_name="Відгук")
+    
     product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
         related_name="review"
     )
+    
     parent = TreeForeignKey(
         'self',
         on_delete=models.CASCADE,
@@ -245,12 +244,10 @@ class Review(MPTTModel):
         blank=True,
         related_name='children'
     )
-    date = models.DateTimeField(
-        auto_now_add=True
-    )
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.review
+        return str(self.id)
 
     class Meta:
         verbose_name = "Відгук"
@@ -258,17 +255,21 @@ class Review(MPTTModel):
         
             
 class ProductInPending(models.Model):
+
     customer = models.ForeignKey(
         Customer,
         on_delete=models.CASCADE,
         null=True,
         blank=True
     )
+
     product = models.ManyToManyField(
         Product,
         related_name='product_in_pending'
     )
 
+    objects = PendingManager()
+    
     def __str__(self):
         return str(self.id)
 
@@ -285,8 +286,10 @@ class RatingProduct(models.Model):
         on_delete=models.CASCADE,
         related_name="rating"
     )
-    value = models.IntegerField(
-        verbose_name="Значення",
+    
+    value = models.DecimalField(
+        max_digits=9,
+        decimal_places=2,
         validators=[
             MinValueValidator(
                 limit_value=1,
@@ -296,7 +299,10 @@ class RatingProduct(models.Model):
                 limit_value=5,
                 message="не більше 5"
             )
-        ])
+        ],
+        verbose_name="Значення"
+        )
+    
     ip_address_user = models.GenericIPAddressField(
         verbose_name="IP адрес користувача",
         protocol="both"
@@ -305,7 +311,7 @@ class RatingProduct(models.Model):
     class Meta:
         verbose_name = "Рейтинг продуктів"
         verbose_name_plural = "Рейтинг продукту"
-
+        
 
 class Reminder(models.Model):
     """ Reminder form customer
@@ -314,10 +320,11 @@ class Reminder(models.Model):
         Customer,
         on_delete=models.CASCADE
     )
-    is_read = models.BooleanField(
-        default=False
-    )
+    
+    is_read = models.BooleanField(default=False)
 
+    objects = ReminderManager()
+    
     def __str__(self):
         return f"{self.customer.username} - {self.is_read}"
 
