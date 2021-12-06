@@ -22,7 +22,7 @@ from .models import (
     RatingProduct
 )
 from customer.models import Customer
-from .services.product import get_client_ip
+from .utils import get_client_ip
 
 
 class CategorySerializers(ModelSerializer):
@@ -124,9 +124,8 @@ class ProductDetailSerializers(ModelSerializer):
     
     def get_rating_value(self, obj):
         user = get_client_ip(self.context.get('request', None))
-        agg_value = RatingProduct.objects.filter(product=obj).aggregate(Sum('value'), Count('id'))#['value__sum']
+        agg_value = RatingProduct.objects.filter(product=obj).aggregate(Sum('value'), Count('id'))
         amount, count = agg_value['value__sum'], agg_value['id__count']
-        # count = RatingProduct.objects.filter(product=obj).count()
         user_exists_rating = RatingProduct.objects.filter(ip_address_user=user, product=obj)
         return {
             "count": count,

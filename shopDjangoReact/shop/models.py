@@ -11,6 +11,7 @@ from .managers.cart_product import CartProductManager
 from .managers.pending import PendingManager
 from .managers.specification_product import SpecificationProductManager
 from .managers.reminder import ReminderManager
+from .managers.review import ReviewManager
 
 class Category(models.Model):
     """ Categories products
@@ -84,7 +85,7 @@ class Product(models.Model):
         verbose_name_plural = "Продукти"
 
     def __str__(self):
-        return f'Продукт {self.title} Категорії {self.category.name}'
+        return f'ID {self.id} Продукт {self.title} Категорії {self.category.name}'
 
 
 class SpecificationProduct(models.Model):
@@ -177,7 +178,9 @@ class Cart(models.Model):
     customer = models.ForeignKey(
         Customer,
         on_delete=models.CASCADE,
-        verbose_name="Покупець"
+        verbose_name="Покупець",
+        blank=True,
+        null=True
     )
     
     products = models.ManyToManyField(
@@ -208,6 +211,13 @@ class Cart(models.Model):
     )
     
     in_order = models.BooleanField(default=False)
+    
+    for_anonymous_user = models.GenericIPAddressField(
+        verbose_name="IP адрес користувача",
+        protocol="both",
+        blank=True,
+        null=True
+    )
     
     objects = CartManager()
     
@@ -244,8 +254,11 @@ class Review(MPTTModel):
         blank=True,
         related_name='children'
     )
+    
     date = models.DateTimeField(auto_now_add=True)
-
+    
+    objects = ReviewManager()
+    
     def __str__(self):
         return str(self.id)
 

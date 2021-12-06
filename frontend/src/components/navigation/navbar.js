@@ -16,6 +16,8 @@ import {
     updateCountReminderCustomer
 } from "../../store/actionCreators";
 import { categoriesAPI, reminderCountAPI } from "../../http/api/product";
+import { mutate } from "swr"
+import { cartCustomer } from "../router/urls";
 
 
 function Navbar() {
@@ -49,7 +51,6 @@ function Navbar() {
             socket.current.onmessage = (event) => {
                 let data = JSON.parse(event.data)
                 let num = data['data'];
-                // setReminderCount(reminderCount => reminderCount + num)
                 dispatch(updateCountReminderCustomer(num))
             }
 
@@ -85,6 +86,7 @@ function Navbar() {
         localStorage.removeItem('token')
         localStorage.removeItem('refresh')
         history.push('/')
+        mutate(cartCustomer)
     }
 
     return (
@@ -147,16 +149,16 @@ function Navbar() {
 
                         </ul>
 
-                        {
-                            isAuth ?
-                                <React.Fragment>
-                                    <Link style={{ 'textDecoration': 'none' }}
-                                        to={{ pathname: `/cart/`, fromDashboard: false }}><CartNavbar />
-                                    </Link>
-                                </React.Fragment>
-                                :
-                                ""
-                        }
+                        {/* {
+                            isAuth ? */}
+                        <React.Fragment>
+                            <Link style={{ 'textDecoration': 'none' }}
+                                to={{ pathname: `/cart/`, fromDashboard: false }}><CartNavbar />
+                            </Link>
+                        </React.Fragment>
+                        {/* : */}
+                        {/* "" */}
+                        {/* } */}
 
                     </div>
                 </div>

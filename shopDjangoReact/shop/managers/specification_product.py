@@ -1,7 +1,4 @@
-from typing import Optional
-
 from django.db import models
-from django.utils.translation import npgettext
 
 
 class SpecificationProductManager(models.Manager):

@@ -36,11 +36,12 @@ function App() {
                     <Route path="/category/:slug" exact
                         render={({ match }) => <DetailCategory match={match} />} />
 
-                    <Route path="/cart/" render={() =>
+                    {/* <Route path="/cart/" render={() =>
                         <IsAuth>
                             <Basket />
                         </IsAuth>
-                    } />
+                    } /> */}
+                    <Route path="/cart/" render={() => <Basket />} />
 
                     <Route path="/profile/" exact render={() => <Profile />} />
                     <Route path="/in-pending/" exact render={() => <InPending />} />
@@ -49,7 +50,7 @@ function App() {
                     <Route path={["/product/:slug", "/specification/:slug"]} exact
                         render={({ match }) => <DetailProduct match={match} />} />
 
-                    <Route path="/review/:id" exact render={() => <ReviewProduct sss/>} />
+                    <Route path="/review/:id" exact render={() => <ReviewProduct sss />} />
 
                     <Route path="/registration/" exact component={Registration} />
                     <Route path="/login/" exact component={Login} />

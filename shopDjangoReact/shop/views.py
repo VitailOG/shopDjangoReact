@@ -2,7 +2,6 @@ from django.http.response import JsonResponse
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
-from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.decorators import action
@@ -11,33 +10,34 @@ from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 
-from .models import (Category,
-                     Cart,
-                     Product,
-                     CartProduct,
-                     Review,
-                     SpecificationProduct,
-                     Reminder,
-                     ProductInPending
-                     )
+from .models import (
+    Category,
+    Cart,
+    Product,
+    Review,
+    SpecificationProduct,
+    Reminder,
+    ProductInPending
+)
 from .pagination import CategoryProductsPagination
-from .serializers import (CategorySerializers,
-                          CartSerializers,
-                          ProductListSerializers,
-                          ReviewSerializers,
-                          ProductDetailSerializers,
-                          SpecificationSerializers,
-                          InPendingSerializers,
-                          ProductWithoutCategorySerializers
-                          )
+from .serializers import (
+    CategorySerializers,
+    CartSerializers,
+    ProductListSerializers,
+    ReviewSerializers,
+    ProductDetailSerializers,
+    SpecificationSerializers,
+    InPendingSerializers,
+    ProductWithoutCategorySerializers
+)
 from .services.cart import (
-                            BaseCartService,
-                            AddProductToCartService, 
-                            DeleteProductFromCart,
-                            ChangeCountProductInCart
-                            )
-from .services.product import create_rating
-from .services.pending import PendingSevice
+    BaseCartService,
+    AddProductToCartService, 
+    DeleteProductFromCart,
+    ChangeCountProductInCart
+)
+from .services.product import DetailProductService
+from .services.pending import correct_products_on_pending
 from .filters import ProductFilter
 from .utils import check_exists_product_in_cart
 
@@ -54,30 +54,30 @@ class CartAPI(ModelViewSet):
     """ API for cart
     """
     queryset = Cart.objects.all()
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
     serializer_class = CartSerializers
 
     @action(methods=['get'], detail=False)
     def get_current_cart_customer(self, *args, **kwargs):
-        current_cart = BaseCartService().get_only_present_products_on_stock(self.request.user)
+        current_cart = BaseCartService(self.request).get_only_present_products_on_stock()
         data = CartSerializers(current_cart).data
         return Response(data)
 
     @action(methods=['post'], detail=False, url_path='add-to-cart/(?P<pk>\d+)')
     def add_to_cart(self, *args, **kwargs):
-        cart_product = AddProductToCartService(self.request.user, self.kwargs.get('pk'))()
+        cart_product = AddProductToCartService(self.kwargs.get('pk'), self.request)()
         if cart_product:
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['post'], detail=False, url_path='delete-from-cart/(?P<pk>\d+)')
     def delete_from_cart(self, *args, **kwargs):
-        DeleteProductFromCart(self.request.user, self.kwargs.get('pk'))()
+        DeleteProductFromCart(self.kwargs.get('pk'), self.request)()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['patch'], detail=False, url_path='change-count-cart-product/(?P<cp>\d+)/(?P<count>\d+)')
     def change_count_cart_product(self, *args, **kwargs):
-        change_count_product_in_cart = ChangeCountProductInCart(self.request.user, self.kwargs.get('cp'), self.kwargs.get('count'))()
+        change_count_product_in_cart = ChangeCountProductInCart(self.kwargs.get('cp'), self.kwargs.get('count'), self.request)()
         if not change_count_product_in_cart:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
@@ -99,30 +99,28 @@ class ProductAPI(ModelViewSet):
         products = Product.objects.get_four_new_product()
         data = ProductListSerializers(products, many=True).data
         if self.request.user.is_authenticated:
-            check_exists_product_in_cart(self.request.user, data)
+            check_exists_product_in_cart(self.request, data)
         return Response(data)
 
     @action(['get'], detail=False, url_path='category/(?P<c>\S+)')
     def category_products(self, *args, **kwargs):
-        products = Product._base_manager.filter(category__slug=self.kwargs.get('c')) \
-            .select_related('category')
+        products = Product.objects.get_products_by_category(self.kwargs.get('c'))
         queryset = self.filter_queryset(products)
         pagination_queryset = self.paginate_queryset(queryset)
         data = ProductListSerializers(pagination_queryset, many=True).data
         if self.request.user.is_authenticated:
-            check_exists_product_in_cart(self.request.user, data)
+            check_exists_product_in_cart(self.request, data)
         return self.get_paginated_response(data)
 
     def retrieve(self, request, slug=None):
-        product = Product.objects.select_related('category')\
-            .filter(slug=slug).first()
+        product = DetailProductService(slug).get_product()
         data = ProductDetailSerializers(product, context=self.get_serializer_context()).data
         return Response(data)
 
     @action(['post'], detail=False, url_path='create-rating/(?P<id_product>\d+)')
     def create_or_update_rating_for_product(self, *args, **kwargs):
         value = self.request.data.get('value')
-        created = create_rating(self.request, self.kwargs.get('id_product'), value)
+        created = DetailProductService(self.kwargs.get('id_product')).create_rating(self.request, value)
         if created:
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -136,8 +134,7 @@ class ReviewAPI(ModelViewSet):
 
     @action(['get'], detail=False, url_path='(?P<product_id>\d+)')
     def comment(self, *args, **kwargs):
-        product_review = Review.objects.prefetch_related('children__customer')\
-            .select_related('customer').filter(product__id=self.kwargs.get('product_id'))
+        product_review = Review.objects.get_review_by_product_id(self.kwargs.get('product_id'))
         data = ReviewSerializers(product_review, many=True).data
         return Response(data)
 
@@ -160,7 +157,7 @@ class InPendingAPI(ModelViewSet):
     @action(methods=['get'], detail=False)
     def get_products_in_pending_customer(self, *args, **kwargs):
         products_in_pending = ProductInPending.objects.get_products_in_pending(self.request.user)
-        correct_data = PendingSevice().correct_products_on_pending(products_in_pending)
+        correct_data = correct_products_on_pending(products_in_pending, self.request)
         data = InPendingSerializers(correct_data).data
         return Response(data)
 

@@ -4,7 +4,6 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from shop.services.cart import BaseCartService
 from .models import Order
 from .serializers import OrderSerializers
 from .services.order import CreateOrderSevice
@@ -18,14 +17,8 @@ class OrderAPI(ModelViewSet):
 
     @action(methods=['post'], detail=False)
     def order(self, *args, **kwargs):
-        cart = BaseCartService().get_customer_cart(self.request.user)
-        try:
-            CreateOrderSevice(self.request.user, cart, **self.request.data)()
-            # send_email.delay(self.request.user)
-        except ValueError:
-            error_message = "Промокода не існує або термін його дії завершився =("
-            return Response({"error": error_message})
-        return Response({"success": True}, status=status.HTTP_201_CREATED)
+        order = CreateOrderSevice(self.request)()
+        return order
 
     @action(methods=['get'], detail=False)
     def get_all_order_customer(self, *args, **kwargs):

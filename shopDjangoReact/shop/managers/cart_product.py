@@ -14,6 +14,6 @@ class CartProductManager(models.Manager):
             return qs
         return qs
 
-    def get_cart_product_for_the_month(month):
+    def get_cart_product_for_the_month(self, month):
         return super().filter(cart__in_order=True, cart__order_cart__order_date__month=month).values('product', 'count')    
     

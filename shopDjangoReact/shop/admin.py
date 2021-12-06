@@ -40,7 +40,7 @@ class ReviewAdmin(admin.ModelAdmin):
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     """Планшети"""
-    list_display = ("id",)
+    list_display = ("id", "all_product", "for_anonymous_user", "customer")
     list_display_links = ("id",)
     # readonly_fields = ('in_order',)
 

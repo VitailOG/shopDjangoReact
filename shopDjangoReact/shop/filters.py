@@ -1,4 +1,8 @@
-from django_filters.rest_framework import FilterSet, CharFilter, RangeFilter
+from django_filters.rest_framework import (
+    FilterSet, 
+    CharFilter, 
+    RangeFilter
+)
 
 from shop.models import Product
 
@@ -13,7 +17,6 @@ class ProductFilter(FilterSet):
         fields = ('title', 'price')
 
     def filter_by_specification(self, queryset, name, value):
-        print(value.split('+'))
         specs = queryset.filter(specification__value_spec__in=value.split('+'))
         return specs
     

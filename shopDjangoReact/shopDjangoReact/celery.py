@@ -11,5 +11,11 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
 app.autodiscover_tasks()
 
-# app.conf.schedule = {
-# }
+app.conf.beat_schedule = {
+    'add-every-30-seconds': {
+        'task': 'shop.tasks.send_info_about_sales_products',
+        'schedule': 10.0,
+    }
+}
+
+app.conf.timezone = 'UTC'

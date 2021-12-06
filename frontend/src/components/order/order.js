@@ -9,10 +9,12 @@ import { Col, Form, InputGroup, Button } from "react-bootstrap";
 import { cartCustomer } from "../router/urls";
 import $axios from "../../http";
 
+
 function Order() {
 
     const history = useHistory();
     const [error, setError] = useState('')
+    const [incorrectProduct, setIncorrectProduct] = useState([])
     const [show, setShow] = useState(false);
 
     const schema = yup.object().shape({
@@ -27,6 +29,8 @@ function Order() {
         promoCode: yup.string(),
     });
 
+
+    console.log(incorrectProduct)
     let makeOrder = (data) => {
         console.log(data)
         $axios.post('/order/make-order/order/', data).then(res => {
@@ -37,6 +41,8 @@ function Order() {
             } else if (res.data.success) {
                 mutate(cartCustomer)
                 history.push("/")
+            } else if (res.data.incorrect_product) {
+                setIncorrectProduct(res.data.incorrect_product)
             }
         }).catch(() => {
             console.log('order error')

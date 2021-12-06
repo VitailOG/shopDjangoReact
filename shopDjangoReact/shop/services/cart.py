@@ -1,3 +1,4 @@
+from uuid import uuid4
 from typing import Optional, Tuple
 
 from django.db.models import Sum
@@ -5,7 +6,6 @@ from rest_framework import status
 
 from rest_framework.response import Response
 
-from customer.models import Customer
 from shop.models import (
     Cart,
     Product,
@@ -16,6 +16,10 @@ from shop.models import (
 class BaseCartService:
     """ Base service for cart
     """
+    
+    def __init__(self, request):
+        self.request = request
+        self.customer = getattr(request, 'user')
     
     @staticmethod
     def _get_cart_product(id: int, count=None):
@@ -41,18 +45,30 @@ class BaseCartService:
         cart.all_product = count
         cart.save()
         
-    def get_customer_cart(self, customer: Customer) -> Optional[Cart]:
-        if customer.is_authenticated:
-            cart = Cart.objects.get_cart_user(customer)
+    def get_customer_cart(self) -> Optional[Cart]:
+        
+        from ..utils import get_client_ip         
+        user_ip = get_client_ip(self.request)
+        
+        if self.customer.is_authenticated:    
+            cart = Cart.objects.get_cart_user(customer=self.customer, user_ip=user_ip)
             if not cart:
-                cart = Cart.objects.create(customer=customer)
+                cart = Cart.objects.create(customer=self.customer)
             return cart
-        return None
-
-    def get_only_present_products_on_stock(self, customer: Customer) -> Cart:
-        cart = self.get_customer_cart(customer=customer)
-        for i in cart.products.filter(product__count_on_stock=0).iterator():
-            ProductInPending.objects.filter(customer=cart.customer).first().product.add(i.product)
+        
+        # for anonymous customer        
+        try:
+           cart = Cart.objects.get(for_anonymous_user=user_ip, customer__isnull=True, in_order=False)
+        except Cart.DoesNotExist:
+           cart = Cart.objects.create(for_anonymous_user=user_ip)
+            
+        return cart
+    
+    def get_only_present_products_on_stock(self) -> Cart:
+        cart = self.get_customer_cart()
+        for i in cart.products.filter(product__count_on_stock=0):
+            if self.customer.is_authenticated:
+                ProductInPending.objects.filter(customer=cart.customer).first().product.add(i.product)
             cart.products.remove(i)
             i.delete()
             self.save_cart(cart)
@@ -62,9 +78,8 @@ class BaseCartService:
 class AddProductToCartService(BaseCartService):
     """ Add product to cart 
     """
-    
-    def __init__(self, customer: Customer, product_id: int):
-        self.customer = customer
+    def __init__(self, product_id: int, request):
+        super().__init__(request)
         self.product_id = product_id
         
     def _create_cart_product(self, cart: Cart, product: Product) -> Tuple[CartProduct, bool]:
@@ -77,7 +92,7 @@ class AddProductToCartService(BaseCartService):
         return Product.objects.get_product_by_id(id)
     
     def add_product_to_cart(self):
-        cart = self.get_customer_cart(self.customer)
+        cart = self.get_customer_cart()
         product = self._get_product(self.product_id)
         cart_product, created = self._create_cart_product(cart, product)
         
@@ -94,13 +109,13 @@ class DeleteProductFromCart(BaseCartService):
     """ Delete product from cart 
     """
     
-    def __init__(self, customer: Customer, cart_product_id: int):
-        self.customer = customer
+    def __init__(self, cart_product_id: int, request):
+        super().__init__(request)
         self.cart_product_id = cart_product_id
     
     def delete_product_from_cart(self):
         cart_product = self._get_cart_product(self.cart_product_id)
-        cart = self.get_customer_cart(self.customer)
+        cart = self.get_customer_cart()
         
         try:
             cart.products.remove(cart_product)
@@ -116,14 +131,12 @@ class DeleteProductFromCart(BaseCartService):
 class ChangeCountProductInCart(BaseCartService):
     """ Change count product in cart
     """
-    def __init__(self, customer: Customer, cart_product_id: int, count: int):
-        self.customer = customer
+    def __init__(self, cart_product_id: int, count: int, request):
+        super().__init__(request)
         self.cart_product_id = cart_product_id
         self.count = count
     
     def validate_count_cart_product(self):
-        """ return False, if count cart product biggest count product on stock 
-        """
         cart_product = self._get_cart_product(self.cart_product_id)
         
         if int(self.count) > cart_product.product.count_on_stock:
@@ -132,7 +145,7 @@ class ChangeCountProductInCart(BaseCartService):
         
     def change_count_product_in_cart(self) -> None:
         validate_count = self.validate_count_cart_product()
-        cart = self.get_customer_cart(self.customer)
+        cart = self.get_customer_cart()
 
         if validate_count:
             self._get_cart_product(self.cart_product_id, self.count)

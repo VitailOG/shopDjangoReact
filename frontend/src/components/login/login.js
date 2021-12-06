@@ -1,14 +1,15 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Form, Col, InputGroup, Image, Button, Spinner} from 'react-bootstrap';
-import {Formik} from "formik";
+import { Form, Col, InputGroup, Image, Button, Spinner } from 'react-bootstrap';
+import { Formik } from "formik";
 import * as yup from 'yup';
-import {loginUrl} from '../router/urls'
+import { loginUrl } from '../router/urls'
 import image from '../../eye (3).png';
 import image2 from '../../eye (4).png';
 import '../../App.css';
 
-import {useAuth} from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
+
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false)
@@ -21,7 +22,7 @@ function Login() {
             .max(32, "Логін є надто довгим").required("Пароль є обов'язковим полем"),
     });
 
-    let login = (e) =>{
+    let login = (e) => {
         auth.auth(e, loginUrl, '/')
     }
 
@@ -31,7 +32,7 @@ function Login() {
                 <div className="container">
                     <div className="row text-white">
                         <div className="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form p-4"
-                             id="login__block">
+                            id="login__block">
                             <h1 className="display-4 py-2 text-muted">Авторизація</h1>
                             <div className="px-2">
 
@@ -44,18 +45,18 @@ function Login() {
                                     }}
                                 >
                                     {({
-                                          handleSubmit,
-                                          handleChange,
-                                          handleBlur,
-                                          values,
-                                          touched,
-                                          isValid,
-                                          errors,
-                                          dirty
+                                        handleSubmit,
+                                        handleChange,
+                                        handleBlur,
+                                        values,
+                                        touched,
+                                        isValid,
+                                        errors,
+                                        dirty
                                     }) => (
                                         <Form noValidate onSubmit={handleSubmit} className="justify-content-center">
                                             <Form.Group as={Col} md="9" className="mx-auto"
-                                                        controlId="validationFormikUsername">
+                                                controlId="validationFormikUsername">
                                                 <InputGroup hasValidation>
                                                     <InputGroup.Text id="inputGroupPrepend">
                                                         <strong>U</strong>
@@ -75,17 +76,17 @@ function Login() {
                                                 </InputGroup>
                                             </Form.Group>
 
-                                            <br/>
+                                            <br />
                                             <Form.Group as={Col} md="9" className="mx-auto"
-                                                        controlId="validationFormikPassword">
+                                                controlId="validationFormikPassword">
 
                                                 <InputGroup hasValidation>
                                                     <InputGroup.Text id="inputGroupPrepend"
-                                                                     onClick={() => setShowPassword(!showPassword)}>
+                                                        onClick={() => setShowPassword(!showPassword)}>
                                                         {showPassword ?
-                                                            <Image src={image} style={{width: '16px'}} fluid/>
+                                                            <Image src={image} style={{ width: '16px' }} fluid />
                                                             :
-                                                            <Image src={image2} style={{width: '16px'}} fluid/>
+                                                            <Image src={image2} style={{ width: '16px' }} fluid />
                                                         }
                                                     </InputGroup.Text>
                                                     <Form.Control
@@ -103,7 +104,7 @@ function Login() {
                                                 </InputGroup>
                                             </Form.Group>
 
-                                            <br/>
+                                            <br />
                                             {
                                                 auth.loading ?
                                                     <Button className="btn btn-primary btn-lg">
@@ -118,11 +119,11 @@ function Login() {
                                                     </Button>
                                                     :
                                                     <button type="submit"
-                                                            disabled={!isValid || !dirty}
-                                                            onClick={() => console.log('add')}
+                                                        disabled={!isValid || !dirty}
+                                                        onClick={() => console.log('add')}
 
-                                                            className="btn btn-primary btn-lg">Увійти</button>
-                                             }
+                                                        className="btn btn-primary btn-lg">Увійти</button>
+                                            }
                                         </Form>
                                     )}
                                 </Formik>
