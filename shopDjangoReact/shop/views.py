@@ -33,8 +33,8 @@ from .serializers import (
 from .services.cart import (
     BaseCartService,
     AddProductToCartService, 
-    DeleteProductFromCart,
-    ChangeCountProductInCart
+    DeleteProductFromCartService,
+    ChangeCountProductInCartService
 )
 from .services.product import DetailProductService
 from .services.pending import correct_products_on_pending
@@ -54,7 +54,6 @@ class CartAPI(ModelViewSet):
     """ API for cart
     """
     queryset = Cart.objects.all()
-    # permission_classes = (IsAuthenticated,)
     serializer_class = CartSerializers
 
     @action(methods=['get'], detail=False)
@@ -72,12 +71,12 @@ class CartAPI(ModelViewSet):
 
     @action(methods=['post'], detail=False, url_path='delete-from-cart/(?P<pk>\d+)')
     def delete_from_cart(self, *args, **kwargs):
-        DeleteProductFromCart(self.kwargs.get('pk'), self.request)()
+        DeleteProductFromCartService(self.kwargs.get('pk'), self.request)()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(methods=['patch'], detail=False, url_path='change-count-cart-product/(?P<cp>\d+)/(?P<count>\d+)')
     def change_count_cart_product(self, *args, **kwargs):
-        change_count_product_in_cart = ChangeCountProductInCart(self.kwargs.get('cp'), self.kwargs.get('count'), self.request)()
+        change_count_product_in_cart = ChangeCountProductInCartService(self.kwargs.get('cp'), self.kwargs.get('count'), self.request)()
         if not change_count_product_in_cart:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
@@ -96,6 +95,13 @@ class ProductAPI(ModelViewSet):
 
     @action(['get'], detail=False, url_path='home')
     def products_on_home_page(self, *args, **kwargs):
+        
+        from .services.report import CreateReportService
+        r = CreateReportService()()
+        print(r)
+        for index, row in r.iterrows():
+            print(f"{row['title']} - {row['count']}")
+            
         products = Product.objects.get_four_new_product()
         data = ProductListSerializers(products, many=True).data
         if self.request.user.is_authenticated:

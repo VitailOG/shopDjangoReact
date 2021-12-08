@@ -10,15 +10,14 @@ class OrderSerializers(ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('id',
-                  'customer',
-                  'order_date',
-                  'first_name',
-                  'last_name',
-                  'phone',
-                  'address',
-                  'type_delivery',
-                  'cart', 
-                  'price_with_promo_code', 
-                  'promo_code'
-                )
+        fields = (
+          'id',
+          'order_date',
+          'first_name',
+          'last_name',
+          'phone',
+          'address',
+          'type_delivery',
+          'cart', 
+          'price_with_promo_code', 
+        )

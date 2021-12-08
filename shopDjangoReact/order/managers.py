@@ -3,7 +3,7 @@ from django.db import models
 from customer.models import Customer
 
 
-class OrderManager(models.Manager):
+class OrderManager(models.Manager): 
     
     def get_all_order_customer(self, customer: Customer):
         return super().exclude(cart__all_product=0)\

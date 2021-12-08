@@ -25,6 +25,7 @@ class OrderAPI(ModelViewSet):
         self.filter_backends = (OrderingFilter,)
         self.ordering_fields = ('id', 'cart__all_price')
         orders = Order.objects.get_all_order_customer(customer=self.request.user)
+    
         queryset = self.filter_queryset(orders)
         data = OrderSerializers(queryset, many=True).data
         return Response(data)

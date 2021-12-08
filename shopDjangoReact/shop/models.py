@@ -13,6 +13,7 @@ from .managers.specification_product import SpecificationProductManager
 from .managers.reminder import ReminderManager
 from .managers.review import ReviewManager
 
+
 class Category(models.Model):
     """ Categories products
     """

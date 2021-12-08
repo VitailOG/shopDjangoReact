@@ -9,8 +9,6 @@ def check_product_in_cart(request):
 
 
 def check_exists_product_in_cart(request, data) -> None:
-    # if user.is_authenticated:
-    print(request.user)
     id_product = check_product_in_cart(request)
     for product in data:
         product['in_cart'] = product['id'] in id_product

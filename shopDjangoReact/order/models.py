@@ -19,36 +19,44 @@ class Order(models.Model):
         related_name='order_customer',
         verbose_name='Покупець'
     )
+    
     first_name = models.CharField(
         verbose_name='Імя',
         max_length=255
     )
+    
     last_name = models.CharField(
         verbose_name='Прізвище',
         max_length=255
     )
+    
     phone = models.CharField(
         verbose_name='Номер',
         max_length=255
     )
+    
     address = models.CharField(
         verbose_name='Адрес',
         blank=True,
         null=True,
         max_length=255
     )
+    
     type_delivery = models.CharField(
         verbose_name='Тип доставки',
         max_length=255
     )
+    
     create_date = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата замовлення'
     )
+    
     order_date = models.DateField(
         verbose_name='Дата на виконання',
         default=timezone.now
     )
+    
     cart = models.ForeignKey(
         Cart,
         on_delete=models.CASCADE,
@@ -57,6 +65,7 @@ class Order(models.Model):
         blank=True,
         null=True
     )
+    
     promo_code = models.ForeignKey(
         'PromoCode',
         on_delete=models.CASCADE,
@@ -64,6 +73,7 @@ class Order(models.Model):
         blank=True,
         null=True
     )
+    
     price_with_promo_code = models.DecimalField(
         max_digits=9,
         decimal_places=2,

@@ -52,17 +52,18 @@ class BaseCartService:
         
         if self.customer.is_authenticated:    
             cart = Cart.objects.get_cart_user(customer=self.customer, user_ip=user_ip)
+            
             if not cart:
                 cart = Cart.objects.create(customer=self.customer)
             return cart
         
         # for anonymous customer        
-        try:
-           cart = Cart.objects.get(for_anonymous_user=user_ip, customer__isnull=True, in_order=False)
-        except Cart.DoesNotExist:
-           cart = Cart.objects.create(for_anonymous_user=user_ip)
-            
-        return cart
+        cart = Cart.objects.all().get_cart_for_anonymous_customer(user_ip)        
+        
+        if not cart:
+            return Cart.objects.create(for_anonymous_user=user_ip)
+        
+        return cart.first()
     
     def get_only_present_products_on_stock(self) -> Cart:
         cart = self.get_customer_cart()
@@ -105,7 +106,7 @@ class AddProductToCartService(BaseCartService):
         return self.add_product_to_cart()
 
 
-class DeleteProductFromCart(BaseCartService):
+class DeleteProductFromCartService(BaseCartService):
     """ Delete product from cart 
     """
     
@@ -128,7 +129,7 @@ class DeleteProductFromCart(BaseCartService):
         return self.delete_product_from_cart()
 
 
-class ChangeCountProductInCart(BaseCartService):
+class ChangeCountProductInCartService(BaseCartService):
     """ Change count product in cart
     """
     def __init__(self, cart_product_id: int, count: int, request):
