@@ -13,7 +13,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'add-every-30-seconds': {
+    'add-every-month': {
         'task': 'shop.tasks.send_info_about_sales_products',
         'schedule': crontab(0, 0, day_of_month='1'),
     }

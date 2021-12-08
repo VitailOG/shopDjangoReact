@@ -4,6 +4,9 @@ shopDjangoReact/.env
 shopDjangoReact/.idea
 shopDjangoReact/__pycache__
 shopDjangoReact/task.txt
+shopDjangoReact/celerybeat-schedule.bak
+shopDjangoReact/celerybeat-schedule.dat
+shopDjangoReact/celerybeat-schedule.dir
 
 frontend/build
 frontend/node_modules

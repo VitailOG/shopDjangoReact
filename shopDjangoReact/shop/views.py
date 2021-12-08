@@ -95,13 +95,6 @@ class ProductAPI(ModelViewSet):
 
     @action(['get'], detail=False, url_path='home')
     def products_on_home_page(self, *args, **kwargs):
-        
-        from .services.report import CreateReportService
-        r = CreateReportService()()
-        print(r)
-        for index, row in r.iterrows():
-            print(f"{row['title']} - {row['count']}")
-            
         products = Product.objects.get_four_new_product()
         data = ProductListSerializers(products, many=True).data
         if self.request.user.is_authenticated:

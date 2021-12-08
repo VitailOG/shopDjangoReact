@@ -10,3 +10,4 @@ from .tasks import send_promo_code_on_email
 def send_message_about_new_promo_code(sender, instance, created, **kwargs):
     if created:
         customer = Customer.random.get_random_customer()
+        send_promo_code_on_email.delay(customer.email, instance.name, instance.interest)

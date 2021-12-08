@@ -4,14 +4,14 @@ from .services.report import CreateReportService
 
 from django.core.mail import send_mail
 
+
 @shared_task
 def send_info_about_sales_products():
     data = CreateReportService()()
     result = ''
-    for index, row in data.iterrows():
+    for _, row in data.iterrows():
         result += f"{row['title']} - {row['count']}\n"
-    print(result)
-            
+   
     send_mail(
         'Статистика',
         result,
