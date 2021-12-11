@@ -1,5 +1,4 @@
 from rest_framework.filters import OrderingFilter
-from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -7,7 +6,6 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Order
 from .serializers import OrderSerializers
 from .services.order import CreateOrderSevice
-from .tasks import send_email
 
 
 class OrderAPI(ModelViewSet):

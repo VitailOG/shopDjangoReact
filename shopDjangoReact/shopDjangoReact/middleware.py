@@ -1,13 +1,7 @@
-# import jwt
+import jwt
 
 from django.utils.deprecation import MiddlewareMixin
-
-# from django.conf import settings
-# from django.contrib.auth import get_user_model
-# from django.contrib.auth.models import AnonymousUser
-# from django.db import close_old_connections
-
-# User = get_user_model()
+from django.conf import settings
 
 
 class CsrfDisableCheckMiddleware(MiddlewareMixin):
@@ -17,18 +11,29 @@ class CsrfDisableCheckMiddleware(MiddlewareMixin):
             setattr(request, '_dont_enforce_csrf_checks', True)
 
 
-# class JwtMiddleware(MiddlewareMixin):
-#     def process_request(self, request):
-        
-#         auth = request.META.get('HTTP_AUTHORIZATION')
-#         try:
-#             token = auth.split(' ')[-1]
-#             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-#             user_id = payload.get('user_id', None) 
-#             try: 
-#                 user = User.objects.get(id=user_id)
-#             except User.DoesNotExist:
-#                 user = AnonymousUser()
-#         except (AttributeError, jwt.exceptions.DecodeError, jwt.exceptions.ExpiredSignatureError):
-#             print('no atuh')
-#             user = AnonymousUser()
+class UserAuthMiddleware:
+    def __init__(self, app):
+        # Store the ASGI application we were passed
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+
+        token = False
+        query = scope["query_string"]
+  
+        if query:
+            query = query.decode()
+  
+        if query:
+            query = query.split('=')
+            if(query[0] == 'token'):
+                token = query[1]
+            
+        if token:
+            # jwt token let's decode it
+            tokenData = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            
+            # save it on user scop
+            scope['user'] = tokenData
+
+        return await self.app(scope, receive, send)
