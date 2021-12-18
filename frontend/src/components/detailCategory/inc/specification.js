@@ -28,7 +28,6 @@ function Specification(props) {
             'tablet': 'Роздільна здатність дисплея',
         }
     }
-    console.log("start detail category")
 
     const [specification, setSpecification] = useState([])
     const [nameProducts, setNameProducts] = useState([])

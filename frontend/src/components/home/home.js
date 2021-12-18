@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Cart from "./inc/cart";
 import HeaderContent from "./inc/headerContent";
 import LoaderProduct from "./inc/loaderProduct";
-import { useSelector } from "react-redux";
+import CartLoader from "./inc/cartLoader"
+
 import { productOnHomePageAPI } from "../../http/api/product";
 import { useAddProductToCart } from "../../hooks/useAddProductToCart";
 import { useAddInPending } from "../../hooks/useAddProductInPending";
+
 
 function Home() {
 
@@ -20,6 +23,7 @@ function Home() {
     const addProductInPending = useAddInPending()
 
     useEffect(() => {
+        setLoad(true)
         productOnHomePageAPI().then(response => {
             setProducts(response)
             setLoad(false)
@@ -50,11 +54,12 @@ function Home() {
                                         addToCart={addToCart}
                                         addInPending={addInPending}
                                         idProduct={addProductToCartCustomer.idProduct}
-                                        isAuth={isAuth}
                                     />
                                 ))}
                             </div>
+
                     }
+                    {/* {Array(10).fill(<p>fewq</p>)} */}
 
                 </div>
             </section>

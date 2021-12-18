@@ -3,12 +3,14 @@ import Spinner from 'react-bootstrap/Spinner'
 
 function CustomButton(props) {
 
+    let inPending = window.location.pathname
+
     return (
         <div className="App">
 
             {
                 props.data.count_on_stock === 0 ?
-                    (props.inPending !== '/in-pending/' ?
+                    (inPending !== '/in-pending/' ?
                         <button type="button"
                             className="btn btn-outline-secondary"
                             onClick={() => props.addInPending(props.data.slug)}
@@ -30,7 +32,7 @@ function CustomButton(props) {
                             onClick={() => props.addToCart(props.data)}
                         >
                             {
-                                props.idProduct.includes(props.data.id) && props.isAuth ?
+                                props.idProduct.includes(props.data.id) ?
                                     <React.Fragment>
                                         <Spinner as="span" animation="border" size="sm"
                                             role="status" aria-hidden="true" />

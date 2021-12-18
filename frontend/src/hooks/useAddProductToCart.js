@@ -16,6 +16,7 @@ export function useAddProductToCart(changeLists = true) {
                 updateProduct.updateFieldProductInCart(obj, products, setProducts)
             }
             mutate(cartCustomer)
+            setIdProduct(idProduct => idProduct.filter(e => e !== obj.id))
         }).catch(() => {
             console.log('error')
         })

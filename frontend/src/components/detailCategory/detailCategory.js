@@ -46,7 +46,6 @@ function DetailCategory({ match }) {
     const addProductToCartCustomer = useAddProductToCart()
     const addProductInPending = useAddInPending()
 
-
     useEffect(() => {
         categoriesProductsAPI(slug, limit, offset, sort, search, minPrice, maxPrice, specs).then(response => {
             setOpenPage(slug)
@@ -170,7 +169,6 @@ function DetailCategory({ match }) {
                                                 addToCart={addToCart}
                                                 idProduct={addProductToCartCustomer.idProduct}
                                                 addInPending={addInPending}
-                                                isAuth={isAuth}
                                             />
                                         ))
                                         :
