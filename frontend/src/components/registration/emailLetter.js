@@ -7,7 +7,7 @@ function EmailLetter() {
 
     return (
         <div className="App">
-            EmailLetter
+            На вказани адрес прийде лист із підтвердження
         </div>
     );
 }

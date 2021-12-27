@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useSelector, useDispatch } from "react-redux";
 
 import Menu from "./inc/menu";
 import Cart from "../home/inc/cart";
-import LoaderProduct from "../home/inc/loaderProduct";
 
 import { clearCountReminderCustomer } from "../../store/actionCreators"
-import { useSelector, useDispatch } from "react-redux";
-import { deleteProductFromPendingAPI, productInPendingAPI, viewAllProductsAPI } from "../../http/api/pending";
+import { deleteProductFromPendingAPI, productInPendingAPI } from "../../http/api/pending";
 import { useAddProductToCart } from "../../hooks/useAddProductToCart";
 
-function InPending() {
+import 'bootstrap/dist/css/bootstrap.min.css';
+import CartLoader from "../home/inc/cartLoader";
+
+function InPending({socket}) {
 
     const [products, setProducts] = useState([])
     const [load, setLoad] = useState(true)
@@ -22,10 +23,8 @@ function InPending() {
     const addProductToCartCustomer = useAddProductToCart(false)
 
     useEffect(() => {
-        viewAllProductsAPI().then(() => {
-            console.log('View')
-            dispatch(clearCountReminderCustomer())
-        })
+        socket.send(JSON.stringify({'clear': true}))
+        dispatch(clearCountReminderCustomer())
     }, [])
 
     useEffect(() => {
@@ -38,7 +37,6 @@ function InPending() {
     function deleteFromPending(slug) {
         deleteProductFromPendingAPI(slug).then(() => {
             setProducts(products => products.filter(product => product.slug !== slug))
-            console.log('delete')
         })
     }
 
@@ -46,8 +44,6 @@ function InPending() {
         addProductToCartCustomer.addToCart(obj, products, setProducts)
         setProducts(products => products.filter(e => e.id !== obj.id))
     }
-
-    console.log('essr')
 
     return (
         <div className="container mt-4">
@@ -62,8 +58,13 @@ function InPending() {
                         {
                             load
                                 ?
-                                <LoaderProduct />
-                                :
+                                <>
+                                    {Array(3).fill(
+                                        <CartLoader/>
+                                    )}
+                                </>
+
+                            :
                                 products.map(e => (
                                     <Cart data={e}
                                         addToCart={addToCart}

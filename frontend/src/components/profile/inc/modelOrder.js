@@ -29,4 +29,4 @@ function ModelOrder(props) {
     );
 }
 
-export default ModelOrder;
+export default React.memo(ModelOrder);

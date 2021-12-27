@@ -6,7 +6,6 @@ import CustomButton from './button'
 
 function Cart(props) {
 
-    console.log('cart')
     return (
         <div className="App">
 
@@ -51,27 +50,3 @@ function Cart(props) {
 }
 
 export default Cart;
-// export default React.memo(Cart, (prevProps, nextProps) => {
-//     if (nextProps.idProduct.includes(nextProps.data.id)) {
-//         return false
-//     } else {
-//         return true
-//     }
-// });
-
-
-
-// export default React.memo(Cart, (prevProps, nextProps) =>{
-    // if(prevProps.idProduct.lenght){
-    //     console.log(1)
-    //     if(nextProps.idProduct.slice(-1)[0] === nextProps.data.id){
-    //         return false
-    //     }else{
-    //         return true
-    //     }
-    // }else{
-    //     console.log(10)
-    //     return false
-    // }
-
-// });

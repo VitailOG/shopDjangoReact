@@ -20,9 +20,9 @@ import { mutate } from "swr"
 import { cartCustomer } from "../router/urls";
 
 
-function Navbar() {
+function Navbar({socket}) {
 
-    const socket = useRef();
+    // const socket = useRef();
 
     const [categories, setCategories] = useState([])
 
@@ -30,7 +30,6 @@ function Navbar() {
 
     const dispatch = useDispatch()
 
-    const username = useSelector(state => state.auth.username)
     const isAuth = useSelector(state => state.auth.isAuth)
     const reminderCount = useSelector(state => state.reminder.countReminder)
 
@@ -42,23 +41,23 @@ function Navbar() {
 
     useEffect(() => {
         if (isAuth) {
-            socket.current = new WebSocket(`ws://127.0.0.1:8000/${username}/?token=${localStorage.getItem('token')}`)
+            // socket.current = new WebSocket(`ws://127.0.0.1:8000/${username}/?token=${localStorage.getItem('token')}`)
 
-            socket.current.onopen = () => {
+            socket.onopen = () => {
                 console.log('start')
             }
 
-            socket.current.onmessage = (event) => {
+            socket.onmessage = (event) => {
                 let data = JSON.parse(event.data)
                 let num = data['data'];
                 dispatch(updateCountReminderCustomer(num))
             }
 
-            socket.current.onclose = () => {
+            socket.onclose = () => {
                 console.log('close')
             }
 
-            socket.current.onerror = () => {
+            socket.onerror = () => {
                 console.log('error')
             }
 
@@ -83,8 +82,6 @@ function Navbar() {
 
     let exit = () => {
         dispatch(logoutAction())
-        localStorage.removeItem('token')
-        localStorage.removeItem('refresh')
         history.push('/')
         mutate(cartCustomer)
     }
@@ -120,7 +117,7 @@ function Navbar() {
 
                             {
                                 !isAuth ?
-                                    <React.Fragment>
+                                    <>
                                         <li className="nav-item">
                                             <Link className="nav-link"
                                                 to={{ pathname: `/login/`, fromDashboard: false }}>Авторизація</Link>
@@ -130,9 +127,9 @@ function Navbar() {
                                                 to={{ pathname: `/registration/`, fromDashboard: false }}>Реєстрація</Link>
 
                                         </li>
-                                    </React.Fragment>
+                                    </>
                                     :
-                                    <React.Fragment>
+                                    <>
                                         <li className="nav-item">
                                             <Link className="nav-link"
                                                 to={{ pathname: `/profile/`, fromDashboard: false }}>
@@ -144,21 +141,16 @@ function Navbar() {
                                                 onClick={() => exit()}>Вихід
                                             </button>
                                         </li>
-                                    </React.Fragment>
+                                    </>
                             }
 
                         </ul>
 
-                        {/* {
-                            isAuth ? */}
-                        <React.Fragment>
+                        <>
                             <Link style={{ 'textDecoration': 'none' }}
                                 to={{ pathname: `/cart/`, fromDashboard: false }}><CartNavbar />
                             </Link>
-                        </React.Fragment>
-                        {/* : */}
-                        {/* "" */}
-                        {/* } */}
+                        </>
 
                     </div>
                 </div>

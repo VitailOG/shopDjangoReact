@@ -9,7 +9,7 @@ function SpecificationProduct(props) {
             <div className="row justify-content-center">
                 <table className="table w-75">
                     <tbody>
-                        {props.productSpec.map((e, i) =>(
+                        {props.productSpec && props.productSpec.map((e, i) =>(
                             <tr key={i}>
                                 <td className="col-md-2">{ e.name_spec }</td>
                                 <td className="col-md-2">{ e.value_spec }</td>

@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from .models import Order
 from .serializers import OrderSerializers
-from .services.order import CreateOrderSevice
+from .services.order import CreateOrderService
 
 
 class OrderAPI(ModelViewSet):
@@ -15,7 +15,7 @@ class OrderAPI(ModelViewSet):
 
     @action(methods=['post'], detail=False)
     def order(self, *args, **kwargs):
-        order = CreateOrderSevice(self.request)()
+        order = CreateOrderService(self.request)()
         return order
 
     @action(methods=['get'], detail=False)

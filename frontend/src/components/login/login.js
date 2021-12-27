@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Col, InputGroup, Image, Button, Spinner } from 'react-bootstrap';
+import { useLocation } from "react-router-dom";
 import { Formik } from "formik";
 import * as yup from 'yup';
 import { loginUrl } from '../router/urls'
@@ -13,6 +14,9 @@ import { useAuth } from "../../hooks/useAuth";
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false)
+
+    const location = useLocation()
+    console.log(location)
 
     const auth = useAuth()
 

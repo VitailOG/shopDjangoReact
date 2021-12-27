@@ -1,5 +1,3 @@
-from customer.models import Customer
-
 from .services.cart import BaseCartService
 
 

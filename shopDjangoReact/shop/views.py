@@ -64,6 +64,7 @@ class CartAPI(ModelViewSet):
 
     @action(methods=['post'], detail=False, url_path='add-to-cart/(?P<pk>\d+)')
     def add_to_cart(self, *args, **kwargs):
+        print('--------')
         cart_product = AddProductToCartService(self.kwargs.get('pk'), self.request)()
         if cart_product:
             return Response(status=status.HTTP_201_CREATED)
@@ -97,8 +98,7 @@ class ProductAPI(ModelViewSet):
     def products_on_home_page(self, *args, **kwargs):
         products = Product.objects.get_four_new_product()
         data = ProductListSerializers(products, many=True).data
-        if self.request.user.is_authenticated:
-            check_exists_product_in_cart(self.request, data)
+        check_exists_product_in_cart(self.request, data)
         return Response(data)
 
     @action(['get'], detail=False, url_path='category/(?P<c>\S+)')
@@ -107,8 +107,7 @@ class ProductAPI(ModelViewSet):
         queryset = self.filter_queryset(products)
         pagination_queryset = self.paginate_queryset(queryset)
         data = ProductListSerializers(pagination_queryset, many=True).data
-        if self.request.user.is_authenticated:
-            check_exists_product_in_cart(self.request, data)
+        check_exists_product_in_cart(self.request, data)
         return self.get_paginated_response(data)
 
     def retrieve(self, request, slug=None):
@@ -203,10 +202,3 @@ class ReminderAPI(ReadOnlyModelViewSet):
             reminder_count = Reminder.objects.reminder_count(self.request.user)
             return JsonResponse({'reminder_count': reminder_count})
         return Response({"reminder_count": 0})
-
-    @action(['post'], detail=False)
-    def view_all_products(self, *args, **kwargs):
-        if self.request.user.is_authenticated:
-            Reminder.objects.read_all(customer=self.request.user)
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)

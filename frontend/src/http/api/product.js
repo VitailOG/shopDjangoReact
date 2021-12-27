@@ -1,5 +1,5 @@
 import $axios from "../index";
-import { categoryUrl, homeListProduct, reminder } from "../../components/router/urls";
+import {categoryUrl, homeListProduct, reminder, setRatingProduct} from "../../components/router/urls";
 import { getParams } from "../../core/utils";
 import axios from "axios";
 
@@ -62,4 +62,8 @@ export function reminderCountAPI() {
         method: "GET",
         url: reminder
     }).then(response => response.data)
+}
+
+export function createRatingAPI(productId, data) {
+    return $axios.post(setRatingProduct + productId + '/', data)
 }

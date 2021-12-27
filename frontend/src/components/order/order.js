@@ -4,10 +4,10 @@ import * as yup from "yup";
 import { Formik, Field } from "formik";
 import { useHistory } from "react-router-dom";
 import { mutate } from "swr";
-import Toast from 'react-bootstrap/Toast'
-import { Col, Form, InputGroup, Button } from "react-bootstrap";
+import { Col, Form, InputGroup, Alert, Button } from "react-bootstrap";
 import { cartCustomer } from "../router/urls";
-import $axios from "../../http";
+import {createOrderAPI} from "../../http/api/cart";
+import Error from "./inc/error";
 
 
 function Order() {
@@ -15,7 +15,6 @@ function Order() {
     const history = useHistory();
     const [error, setError] = useState('')
     const [incorrectProduct, setIncorrectProduct] = useState([])
-    const [show, setShow] = useState(false);
 
     const schema = yup.object().shape({
         firstName: yup.string().required("Ім'я є обов'язковим полем"),
@@ -29,24 +28,24 @@ function Order() {
         promoCode: yup.string(),
     });
 
-
-    console.log(incorrectProduct)
     let makeOrder = (data) => {
-        console.log(data)
-        $axios.post('/order/make-order/order/', data).then(res => {
-            console.log(res.data)
-            if (res.data.error) {
-                setError(res.data.error)
-                setShow(true)
-            } else if (res.data.success) {
+        createOrderAPI(data).then(res => {
+            if (res.error) {
+                setError(res.error)
+            } else if (res.success) {
                 mutate(cartCustomer)
                 history.push("/")
-            } else if (res.data.incorrect_product) {
-                setIncorrectProduct(res.data.incorrect_product)
+            } else if (res.incorrect_product) {
+                setIncorrectProduct(res.incorrect_product)
             }
         }).catch(() => {
             console.log('order error')
         })
+    }
+
+    let hideBadProduct =() => {
+        setIncorrectProduct([])
+        setError('')
     }
 
     return (
@@ -55,14 +54,15 @@ function Order() {
                 <div id="cover-caption-registration">
                     <div className="container">
                         <div className="row text-white">
+
+                            <Error incorrectProduct={incorrectProduct}
+                                   error={error}
+                                   hideBadProduct={hideBadProduct}
+                            />
+
                             <div className="col-xl-5 col-lg-6 col-md-8 col-sm-10 mx-auto text-center form p-4"
                                 id="login__block">
 
-                                <Toast show={show} positive="top-left" onClose={() => setShow(false)}>
-                                    <Toast.Header>
-                                        <strong className="me-auto">{error}</strong>
-                                    </Toast.Header>
-                                </Toast>
 
                                 <h2 className="display-5 py-2 text-muted">Оформлення замовлення</h2>
 
@@ -187,6 +187,7 @@ function Order() {
                                                             aria-describedby="inputGroupPrepend"
                                                             name="date"
                                                             value={values.date}
+                                                            placeholder="yyyy-mm-dd"
                                                             onChange={handleChange}
                                                             isInvalid={!!errors.date}
                                                         />

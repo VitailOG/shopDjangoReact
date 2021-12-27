@@ -1,4 +1,3 @@
-from uuid import uuid4
 from typing import Optional, Tuple
 
 from django.db.models import Sum
@@ -12,6 +11,7 @@ from shop.models import (
     CartProduct,
     ProductInPending
 )
+
 
 class BaseCartService:
     """ Base service for cart
@@ -91,13 +91,19 @@ class AddProductToCartService(BaseCartService):
 
     def _get_product(self, id: int) -> Product:
         return Product.objects.get_product_by_id(id)
-    
+
+    def remove_product_from_pending(self, product):
+        pending = ProductInPending.objects.get(customer=self.customer)
+        if pending.product.filter(id=product.id).exists():
+            pending.product.remove(product)
+
     def add_product_to_cart(self):
         cart = self.get_customer_cart()
         product = self._get_product(self.product_id)
         cart_product, created = self._create_cart_product(cart, product)
         
         if created:
+            self.remove_product_from_pending(product)
             cart.products.add(cart_product)
             self.save_cart(cart)
         return created
@@ -137,7 +143,7 @@ class ChangeCountProductInCartService(BaseCartService):
         self.cart_product_id = cart_product_id
         self.count = count
     
-    def validate_count_cart_product(self):
+    def validate_count_cart_product(self) -> bool:
         cart_product = self._get_cart_product(self.cart_product_id)
         
         if int(self.count) > cart_product.product.count_on_stock:

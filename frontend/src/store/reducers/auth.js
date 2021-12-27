@@ -8,6 +8,8 @@ const initialState = {
 export function authReducer(state = initialState, action) {
     switch (action.type) {
         case LOGIN:
+            localStorage.removeItem('token')
+            localStorage.removeItem('refresh')
             return { ...state, username: action.payload, isAuth: true }
         case EXIT:
             return { ...state, username: '', isAuth: false }

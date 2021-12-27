@@ -1,25 +1,26 @@
 import React from 'react';
-import { Card, Button } from 'react-bootstrap';
-import { Placeholder } from 'react-bootstrap';
+import { ShimmerBadge, ShimmerTitle, ShimmerThumbnail } from "react-shimmer-effects";
+
 
 export default function CartLoader() {
     return (
-        //         <div className="d-flex justify-content-around">
-        //
-        //             <Card style={{ width: '18rem' }}>
-        //                 <Card.Img variant="top" src="holder.js/100px180" />
-        //                 <Card.Body>
-        //                     <Placeholder as={Card.Title} animation="glow">
-        //                         <Placeholder xs={6} />
-        //                     </Placeholder>
-        //                     <Placeholder as={Card.Text} animation="glow">
-        //                         <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} />{' '}
-        //                         <Placeholder xs={6} /> <Placeholder xs={8} />
-        //                     </Placeholder>
-        //                     <Placeholder.Button variant="primary" xs={6} />
-        //                 </Card.Body>
-        //             </Card>
-        //         </div>
-        <div></div>
+        <>
+            <div className="col mb-5">
+                <div className="card h-100">
+                    <ShimmerThumbnail height={200} rounded />
+                        <div className="card-body p-4">
+                            <div className="text-center">
+                                <ShimmerTitle line={2} gap={10} variant="primary" />
+                            </div>
+                        </div>
+                    <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div className="text-center">
+                            <ShimmerBadge width={100} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </>
     )
 };

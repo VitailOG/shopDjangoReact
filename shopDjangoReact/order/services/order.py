@@ -5,12 +5,12 @@ from rest_framework import status
 
 from customer.models import Customer
 from order.models import Order, PromoCode
+from order.serializers import WrongProductsSerializers
 from shop.models import Cart
-from shop.serializers import CartProductSerializers
 from shop.services.cart import BaseCartService
 
 
-class CreateOrderSevice:
+class CreateOrderService:
     
     error_message = "Промокода не існує або термін його дії завершився =("
     
@@ -35,7 +35,15 @@ class CreateOrderSevice:
         error = []
         for product in cart.products.all():
             if product.count > product.product.count_on_stock:
-                error.append(product)
+
+                obj = {
+                    "title": product.product.title,
+                    "cartProduct": product.count,
+                    "countOnStock": product.product.count_on_stock,
+                    "id": product.id,
+                }
+
+                error.append(obj)
         
         if len(error) > 0:
             return error
@@ -45,7 +53,7 @@ class CreateOrderSevice:
         correct_cart = self._validate(self.cart)
         
         if isinstance(correct_cart, list):
-            data = CartProductSerializers(correct_cart, many=True).data
+            data = WrongProductsSerializers(correct_cart, many=True).data
             return Response({'incorrect_product': data})
        
         order = Order(

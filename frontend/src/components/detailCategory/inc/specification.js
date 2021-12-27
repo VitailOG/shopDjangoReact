@@ -11,23 +11,11 @@ import {
     searchAction
 } from "../../../store/actionCreators";
 import { specificationNameProductsAPI, specificationProductsAPI } from "../../../http/api/product";
+import Price from "../inc/spec/price";
+import {nameSpec} from "../../../core/config";
+
 
 function Specification(props) {
-
-    const nameSpec = {
-        1: {
-            'phone': 'Тип екрану',
-            'pc': 'Модель відеокарти',
-            'notebook': 'Діагональ дисплея',
-            'tablet': 'Діагональ дисплея',
-        },
-        2: {
-            'phone': 'Процесор',
-            'pc': "Об`єм пам'яті відеокарти",
-            'notebook': 'Кількість ядер',
-            'tablet': 'Роздільна здатність дисплея',
-        }
-    }
 
     const [specification, setSpecification] = useState([])
     const [nameProducts, setNameProducts] = useState([])
@@ -90,10 +78,11 @@ function Specification(props) {
         <div className="App">
 
             <div>
+
                 <form className="search__form">
 
                     <div className="input-group mb-3">
-                        <input type="text"
+                         <input type="text"
                             className="form-control"
                             placeholder="Введіть назву товару"
                             value={search}
@@ -110,7 +99,7 @@ function Specification(props) {
 
                     {
                         autoCompleteActive && search ?
-                            <React.Fragment>
+                            <>
                                 <ul className="autocomplete">
                                     {filterNameProduct.map(e => (
                                         <li className="autocomplete__item" key={e}
@@ -118,7 +107,7 @@ function Specification(props) {
                                         >{e.title}</li>
                                     ))}
                                 </ul>
-                            </React.Fragment>
+                            </>
                             :
                             ""
                     }
@@ -173,7 +162,7 @@ function Specification(props) {
                             {
                                 specification.map(e => (
                                     e.name_spec === "Тип екрану" && props.slug == 'phone' ?
-                                        <React.Fragment>
+                                        <>
                                             <div className="form-check">
                                                 <input className="form-check-input" type="checkbox" value={e.value_spec}
                                                     onClick={() => addOrRemoveSpecification(e.value_spec)}
@@ -182,10 +171,10 @@ function Specification(props) {
                                                     {e.value_spec}
                                                 </label>
                                             </div>
-                                        </React.Fragment>
+                                        </>
                                         :
                                         e.name_spec === "Модель відеокарти" && props.slug == 'pc' ?
-                                            <React.Fragment>
+                                            <>
                                                 <div className="form-check">
                                                     <input className="form-check-input" type="checkbox" value={e.value_spec}
                                                         onClick={() => addOrRemoveSpecification(e.value_spec)}
@@ -194,7 +183,7 @@ function Specification(props) {
                                                         {e.value_spec}
                                                     </label>
                                                 </div>
-                                            </React.Fragment>
+                                            </>
                                             : e.name_spec === "Діагональ дисплея" && props.slug == 'tablet' ?
                                                 <React.Fragment>
                                                     <div className="form-check">
@@ -287,22 +276,30 @@ function Specification(props) {
                         </div>
                     </div>
                 </div>
-                <div className="col-md-6">
-                    <input type="number"
-                        placeholder="Від"
-                        className="form-control mt-3" min={minPrice} value={minPrice}
-                        onChange={event => setMinPrice(event.target.value)}
-                    />
-                    <input type="number"
-                        placeholder="До"
-                        className="form-control mt-1" min={props.maxPrice} value={maxPrice}
-                        onChange={event => setMaxPrice(event.target.value)}
-                    />
-                    <button type="button"
-                        className="btn btn-primary mt-2"
-                        onClick={() => setPrice()}
-                    >Встановити ціну</button>
-                </div>
+
+                <Price minPrice={minPrice}
+                       setMinPrice={setMinPrice}
+                       maxPrice={maxPrice}
+                       setPrice={setPrice}
+                       setMaxPrice={setMaxPrice}
+                />
+
+                {/*<div className="col-md-6">*/}
+                {/*    <input type="number"*/}
+                {/*        placeholder="Від"*/}
+                {/*        className="form-control mt-3" min={minPrice} value={minPrice}*/}
+                {/*        onChange={event => setMinPrice(event.target.value)}*/}
+                {/*    />*/}
+                {/*    <input type="number"*/}
+                {/*        placeholder="До"*/}
+                {/*        className="form-control mt-1" max={maxPrice} value={maxPrice}*/}
+                {/*        onChange={event => setMaxPrice(event.target.value)}*/}
+                {/*    />*/}
+                {/*    <button type="button"*/}
+                {/*        className="btn btn-primary mt-2"*/}
+                {/*        onClick={() => setPrice()}*/}
+                {/*    >Встановити ціну</button>*/}
+                {/*</div>*/}
             </div>
         </div>
     );

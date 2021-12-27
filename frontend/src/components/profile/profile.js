@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Menu from "./inc/menu";
 import ModelOrder from "./inc/modelOrder";
 import { Table } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { profileAPI } from "../../http/api/auth";
-
+import OrderItem from "./inc/OrderItem";
+import { ShimmerTable } from "react-shimmer-effects";
 
 function Profile() {
 
@@ -26,10 +27,10 @@ function Profile() {
         })
     }, [ordering]);
 
-    const openModel = (order) => {
+    const openModel = useCallback((order) => {
         setObj(order)
         handleShow()
-    }
+    }, [])
 
     let sortTable = (e) => {
         setDescending(!descending)
@@ -44,43 +45,34 @@ function Profile() {
                 </div>
                 <div className="col-8">
                     <h2 style={{ "display": "block", "marginBottom": "25px" }}>Замовлення - {username}</h2>
-                    <Table style={{ "marginBottom": "50px" }}>
-                        <thead>
-                            <tr>
-                                <th width='1' onClick={() => sortTable('id')}
-                                    className="text-center" style={{ width: "50px", cursor: "pointer" }}>Номер</th>
-                                <th width='1'
-                                    className="text-center" style={{ width: "50px" }}>Дата замовлення</th>
-                                <th width='1' onClick={() => sortTable('cart__all_price')}
-                                    className="text-center" style={{ width: "50px", cursor: "pointer" }}>Сума замовлень</th>
-                                <th width='1' className="text-center" style={{ width: "50px" }}>Детальніше</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {orders && orders.map(e => (
-                                <tr key={e.id}>
-                                    <td style={{ 'textAlign': 'center' }}>{e.id}</td>
-                                    <td style={{ 'textAlign': 'center' }}>{e.order_date}</td>
-                                    {
-                                        e.price_with_promo_code !== null
-                                            ?
-                                            <td style={{ 'textAlign': 'center' }}>{e.price_with_promo_code} грн.</td>
-                                            :
-                                            e.cart.discount === "0.00"
-                                                ?
-                                                <td style={{ 'textAlign': 'center' }}>{e.cart.all_price} грн.</td>
-                                                :
-                                                <td style={{ 'textAlign': 'center' }}>{e.cart.discount} грн.</td>
-                                    }
-                                    <td style={{ 'textAlign': 'center' }}>
-                                        <a className="btn btn-info text-white"
-                                            onClick={() => openModel(e)}
-                                        >Детальніше</a>
-                                    </td>
+
+                    {
+                        orders.length >  0 ?
+                            <Table style={{ "marginBottom": "50px" }}>
+                                <thead>
+                                <tr>
+                                    <th width='1' onClick={() => sortTable('id')}
+                                        className="text-center" style={{ width: "50px", cursor: "pointer" }}>Номер</th>
+                                    <th width='1'
+                                        className="text-center" style={{ width: "50px" }}>Дата замовлення</th>
+                                    <th width='1' onClick={() => sortTable('cart__all_price')}
+                                        className="text-center" style={{ width: "50px", cursor: "pointer" }}>Сума замовлень</th>
+                                    <th width='1' className="text-center" style={{ width: "50px" }}>Детальніше</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
+                                </thead>
+                                <tbody>
+
+                                {orders.map(e => (
+                                    <OrderItem key={e.id} e={e} openModel={openModel}/>
+                                ))}
+
+                                </tbody>
+                            </Table>
+                            :
+                            <ShimmerTable row={5} col={5} />
+                    }
+
+
                 </div>
             </div>
             <ModelOrder handleShow={handleShow}

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="73361db5-c140-4c68-8ca0-d68efdad9900" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/components/basket/inc/item.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/basket/inc/price.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/detailCategory/inc/breadCrumb.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/detailCategory/inc/selectsForFilters.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/detailCategory/inc/spec/price.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/detailCategory/inc/specsList.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/detailProduct/inc/form.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/detailProduct/inc/message.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/order/inc/error.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/profile/inc/OrderItem.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/basket/basket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/basket/basket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailCategory/detailCategory.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailCategory/detailCategory.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailCategory/inc/specification.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailCategory/inc/specification.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/detailProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/detailProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/inc/carousel.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/inc/carousel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/inc/infoProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/inc/infoProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/inc/nav.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/inc/nav.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/reviewProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/reviewProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/specificationProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/specificationProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/inc/button.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/inc/button.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/inc/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/inc/cart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/inc/cartLoader.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/inc/cartLoader.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/home/inc/loaderProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/inc/loaderProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/login/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/login/login.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/navigation/navbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/navigation/navbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/order/order.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/order/order.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/profile/inPending.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/profile/inPending.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/profile/inc/modelOrder.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/profile/inc/modelOrder.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/profile/profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/registration/emailLetter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/registration/emailLetter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/router/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/router/urls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/core/config.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hoc/IsAuth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/hoc/IsAuth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/http/api/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/http/api/cart.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/http/api/pending.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/http/api/pending.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/http/api/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/http/api/product.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/reducers/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/reducers/auth.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/celerybeat-schedule.bak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/celerybeat-schedule.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/celerybeat-schedule.dir" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/customer/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/customer/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/customer/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/customer/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/customer/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/customer/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/order/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/order/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/order/services/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/order/services/order.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/order/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/order/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/consumers/reminder.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/consumers/reminder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/consumers/review.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/consumers/review.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/filters.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/filters.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/managers/product.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/managers/product.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/services/product.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/services/product.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shopDjangoReact/celery.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shopDjangoReact/celery.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shopDjangoReact/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shopDjangoReact/settings.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="22kFTdPfnisbn0MIWIDR0Um8miP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="ts.external.directory.path" value="$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="73361db5-c140-4c68-8ca0-d68efdad9900" name="Changes" comment="" />
+      <created>1640373688430</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1640373688430</updated>
+      <workItem from="1640373690610" duration="4936000" />
+      <workItem from="1640540197512" duration="11245000" />
+      <workItem from="1640559750690" duration="3941000" />
+      <workItem from="1640611659107" duration="6941000" />
+      <workItem from="1640632064921" duration="2272000" />
+      <workItem from="1640637925405" duration="2659000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

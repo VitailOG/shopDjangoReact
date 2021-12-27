@@ -1,6 +1,7 @@
 import json
 
 from typing import Tuple
+
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 
@@ -11,20 +12,21 @@ from customer.models import Customer
 class ReviewConsumer(AsyncWebsocketConsumer):
     """ Consumer for create review to product
     """
+
     async def connect(self):
-        self.product_id = self.scope['url_route']['kwargs']['product_id'] 
-        
-        self.product_group_name = f'product_{self.product_id}'
-        
+        self.product_id = self.scope['url_route']['kwargs']['product_id']
+
+        self.group_name = f'product_{self.product_id}'
+
         await self.channel_layer.group_add(
-            self.product_group_name,
+            self.group_name,
             self.channel_name
         )
         await self.accept()
     
     async def disconnect(self, code):
         await self.channel_layer.group_discard(
-            self.product_group_name,
+            self.group_name,
             self.channel_name
         )
 
@@ -46,7 +48,7 @@ class ReviewConsumer(AsyncWebsocketConsumer):
         data = await self.build_data(new_review, user)   
         
         await self.channel_layer.group_send(
-            self.product_group_name,
+            self.group_name,
             {
                 'type': 'new_review',
                 'message': data
@@ -70,4 +72,4 @@ class ReviewConsumer(AsyncWebsocketConsumer):
             product_id=self.product_id,
         )
         
-        return (review, review.customer)
+        return review, review.customer

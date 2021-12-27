@@ -26,9 +26,8 @@ class DetailProductService(BaseProductSevice):
     def get_product(self):
         product = self._get_from_cache(self.slug_or_id)
         if not product:
-            print('from db')
             product = Product.objects.get_product_by_slug(slug=self.slug_or_id, related=True)
-            self._set_to_cache(self.slug_or_id, product)  
+            self._set_to_cache(self.slug_or_id, product)
         return product
 
     def create_rating(self, request, value):
@@ -39,4 +38,5 @@ class DetailProductService(BaseProductSevice):
                 'value': value,
             }
         )
+
         return create

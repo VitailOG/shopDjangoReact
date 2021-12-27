@@ -1,16 +1,18 @@
 import React from 'react';
 import Spinner from 'react-bootstrap/Spinner'
+import {useLocation} from "react-router-dom";
+
 
 function CustomButton(props) {
 
-    let inPending = window.location.pathname
+    let {pathname} = useLocation()
 
     return (
         <div className="App">
 
             {
                 props.data.count_on_stock === 0 ?
-                    (inPending !== '/in-pending/' ?
+                    (pathname !== '/in-pending/' ?
                         <button type="button"
                             className="btn btn-outline-secondary"
                             onClick={() => props.addInPending(props.data.slug)}
@@ -33,10 +35,10 @@ function CustomButton(props) {
                         >
                             {
                                 props.idProduct.includes(props.data.id) ?
-                                    <React.Fragment>
+                                    <>
                                         <Spinner as="span" animation="border" size="sm"
                                             role="status" aria-hidden="true" />
-                                    </React.Fragment>
+                                    </>
                                     :
                                     `Добавити в корзину`
                             }

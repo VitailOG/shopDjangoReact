@@ -20,37 +20,56 @@ import EmailLetter from "./components/registration/emailLetter"
 
 import LoadingBar from "react-top-loading-bar";
 import { IsAuth } from "./hoc/IsAuth"
+import {useSelector} from "react-redux";
 
 
 function App() {
-
+    const username = useSelector(state => state.auth.username)
     const ref = useRef(null);
+    const socket = useRef();
+
+    socket.current = new WebSocket(`ws://127.0.0.1:8000/${username}/?token=${localStorage.getItem('token')}`)
+
     return (
         <div className="wrapper">
             {/* https://codesandbox.io/s/react-loading-forked-nr9uf?file=/src/Menu.js */}
             <Router>
-                <Navbar />
+                <Navbar socket={socket.current}/>
                 <LoadingBar color="#f11946" ref={ref} />
                 <Switch>
+                    {/*Private route*/}
+                    <Route path="/profile/" render={() =>
+                        <IsAuth>
+                            <Profile />
+                        </IsAuth>
+                    } />
+
+                    <Route path="/in-pending/" render={() =>
+                        <IsAuth>
+                            <InPending socket={socket.current}/>
+                        </IsAuth>
+                    } />
+
+                    <Route path="/order/" render={() =>
+                        <IsAuth>
+                            <Order />
+                        </IsAuth>
+                    } />
+
                     <Route path="/" exact render={() => <Home />} />
                     <Route path="/category/:slug" exact
                         render={({ match }) => <DetailCategory match={match} />} />
 
-                    {/* <Route path="/cart/" render={() =>
-                        <IsAuth>
-                            <Basket />
-                        </IsAuth>
-                    } /> */}
                     <Route path="/cart/" render={() => <Basket />} />
 
-                    <Route path="/profile/" exact render={() => <Profile />} />
-                    <Route path="/in-pending/" exact render={() => <InPending />} />
-                    <Route path="/order/" exact render={() => <Order />} />
+                    {/*<Route path="/profile/" exact render={() => <Profile />} />*/}
+                    {/*<Route path="/in-pending/" exact render={() => <InPending />} />*/}
+                    {/*<Route path="/order/" exact render={() => <Order />} />*/}
 
                     <Route path={["/product/:slug", "/specification/:slug"]} exact
                         render={({ match }) => <DetailProduct match={match} />} />
 
-                    <Route path="/review/:id" exact render={() => <ReviewProduct sss />} />
+                    <Route path="/review/:id" exact render={() => <ReviewProduct />} />
 
                     <Route path="/registration/" exact component={Registration} />
                     <Route path="/login/" exact component={Login} />

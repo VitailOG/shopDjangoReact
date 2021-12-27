@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Cart from "./inc/cart";
 import HeaderContent from "./inc/headerContent";
-import LoaderProduct from "./inc/loaderProduct";
 import CartLoader from "./inc/cartLoader"
 
 import { productOnHomePageAPI } from "../../http/api/product";
 import { useAddProductToCart } from "../../hooks/useAddProductToCart";
 import { useAddInPending } from "../../hooks/useAddProductInPending";
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function Home() {
 
     const [products, setProducts] = useState([])
-    const [load, setLoad] = useState(true)
+    const [load, setLoad] = useState(null)
 
     const isAuth = useSelector(state => state.auth.isAuth)
 
@@ -43,24 +43,29 @@ function Home() {
             <HeaderContent />
             <section className="py-5">
                 <div className="container px-4 px-lg-5 mt-5">
+                    <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 
                     {
                         load ?
-                            <LoaderProduct />
+                            <>
+                                {Array(4).fill(
+                                    <CartLoader/>
+                                )}
+                            </>
                             :
-                            <div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                            <>
                                 {products.map(e => (
                                     <Cart data={e}
                                         addToCart={addToCart}
                                         addInPending={addInPending}
                                         idProduct={addProductToCartCustomer.idProduct}
+                                        load={load}
                                     />
                                 ))}
-                            </div>
-
+                            </>
                     }
-                    {/* {Array(10).fill(<p>fewq</p>)} */}
 
+                    </div>
                 </div>
             </section>
         </div>

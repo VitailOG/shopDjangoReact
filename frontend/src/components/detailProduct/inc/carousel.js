@@ -7,7 +7,7 @@ function CarouselImage(props) {
 
     return (
         <Carousel style={{ 'width': '50%', 'marginLeft': '103px', 'color': 'red' }} nextLabel={""} prevLabel={""}>
-            {props.productImg.map((e => (
+            {props.productImg && props.productImg.map((e => (
                 <Carousel.Item>
                     <img
                         className="d-block w-100"
@@ -21,4 +21,4 @@ function CarouselImage(props) {
     );
 }
 
-export default CarouselImage;
+export default React.memo(CarouselImage);

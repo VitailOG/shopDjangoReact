@@ -1,10 +1,14 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from "react-router-dom";
-import { cartCustomer } from "../router/urls";
-import { Table, Image, Button, Badge } from 'react-bootstrap';
 import useSWR, { mutate } from "swr";
+
 import { changeCountProductOnCartAPI, deleteFromCartAPI, getCartProductAPI } from "../../http/api/cart";
+import { cartCustomer } from "../router/urls";
+import Price from "./inc/price";
+import Item from "./inc/item";
+
+import { Table, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Basket() {
 
@@ -48,38 +52,14 @@ function Basket() {
                     </thead>
                     <tbody>
                         {data.products.map(e => (
-                            <tr key={e.id}>
-                                <td>{e.product.title}</td>
-                                <td>
-                                    <form>
-                                        <input className="form-control"
-                                            defaultValue={e.count}
-                                            onChange={event => changeCountProductOnCart(event.target.value, e.id)}
-                                            // onChange={changeCountProductOnCart(e.id)}
-                                            min="1"
-                                            max={e.product.count_on_stock}
-                                            style={{ width: "60px", margin: "0 auto" }}
-                                            type="number" />
-                                    </form>
-                                </td>
-                                <td style={{ verticalAlign: "middle", textAlign: "center" }}>
-                                    <Image src={e.product.main_img}
-                                        style={{ width: "200px", height: "auto" }} fluid />
-                                </td>
-                                <td>{e.product.price} грн.</td>
-                                <td>{e.all_price} грн.</td>
-                                <td>
-                                    <Button variant="danger"
-                                        size="md"
-                                        id={e.id}
-                                        onClick={() => deleteFromCart(e.id)}
-                                        block>Видалити</Button>
-                                </td>
-                            </tr>
+                            <Item e={e}
+                                  changeCountProductOnCart={changeCountProductOnCart}
+                                  deleteFromCart={deleteFromCart}
+                            />
                         ))}
                     </tbody>
                     {data.all_product ?
-                        <React.Fragment>
+                        <>
                             <tr>
                                 <td>
                                     <Button variant="success" className="btn-success"
@@ -94,21 +74,13 @@ function Basket() {
                                 <td></td>
                                 <td>Загальна ціна</td>
 
-                                {data.discount === '0.00' ?
-                                    <td><strong>{data.all_price}</strong> грн.</td>
-                                    :
-                                    data.all_product < 6 ?
-                                        <td><strong>{data.discount}</strong> грн.
-                                            <Badge className="badge bg-success">5%</Badge>
-                                        </td>
-                                        :
-                                        <td><strong>{data.discount}</strong> грн.
-                                            <Badge className="badge bg-info">10%</Badge>
-                                        </td>
-                                }
+                                <Price discount={data.discount}
+                                       all_price={data.all_price}
+                                       all_product={data.all_product}
+                                />
 
                             </tr>
-                        </React.Fragment>
+                        </>
                         :
                         ""
                     }

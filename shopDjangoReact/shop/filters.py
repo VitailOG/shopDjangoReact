@@ -17,6 +17,6 @@ class ProductFilter(FilterSet):
         fields = ('title', 'price')
 
     def filter_by_specification(self, queryset, name, value):
-        specs = queryset.filter(specification__value_spec__in=value.split('+'))
+        specs = queryset.filter(specification__value_spec__in=value.split('+')).distinct()
         return specs
     

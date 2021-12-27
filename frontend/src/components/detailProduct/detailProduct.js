@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
+import {useLocation} from "react-router-dom"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SpecificationProduct from "./specificationProduct";
 import NavBar from "./inc/nav";
@@ -8,9 +9,9 @@ import { productDetailAPI } from "../../http/api/product";
 
 function DetailProduct({ match }) {
 
+    const location = useLocation()
+
     const [product, setProduct] = useState({})
-    const [productImg, setProductImg] = useState([])
-    const [productSpec, setProductSpec] = useState([])
 
     const [commonRatingProduct, setCommonRatingProduct] = useState(0)
     const [countRating, setCountRating] = useState(0)
@@ -20,47 +21,38 @@ function DetailProduct({ match }) {
 
     useEffect(() => {
         productDetailAPI(productSlug).then(response => {
-            localStorage.setItem('num', response.rating_value.user_exists_rating)
-            // rating 
+            setProduct(response)
+
             setCommonRatingProduct(response.rating_value.all_rating)
             setUserRating(response.rating_value.user_exists_rating)
             setCountRating(response.rating_value.count)
-            // product
-            setProduct(response)
-            setProductImg(response.product_image)
-            setProductSpec(response.specification)
         })
     }, [productSlug]);
 
     return (
         <div className="container mt-5">
             <NavBar
+                location={location}
                 productSlug={productSlug}
                 productId={product.id}
             />
 
             {
-                window.location.pathname.startsWith('/product/') ?
-                    <Main
-                        // for product
-                        productImg={productImg}
-                        productName={product.title}
-                        productPrice={product.price}
-                        productImg={productImg}
+                location.pathname.startsWith('/product/') ?
+                    <Main commonRatingProduct={commonRatingProduct}
+                          setCommonRatingProduct={setCommonRatingProduct}
 
-                        // for rating
-                        // value
-                        commonRatingProduct={commonRatingProduct}
-                        userRating={userRating}
-                        productId={product.id}
-                        countRating={countRating}
-                        // change
-                        setCountRating={setCountRating}
-                        setCommonRatingProduct={setCommonRatingProduct}
-                        setUserRating={setUserRating}
+                          countRating={countRating}
+                          setCountRating={setCountRating}
+
+                          userRating={userRating}
+                          setUserRating={setUserRating}
+
+                          product={product}
+                          setProduct={setProduct}
                     />
                     :
-                    <SpecificationProduct productSpec={productSpec} />
+                    <SpecificationProduct productSpec={product.specification} />
             }
 
         </div>

@@ -1,10 +1,17 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 from shop.serializers import CartSerializers
 from .models import Order
 
 
-class OrderSerializers(ModelSerializer):
+class WrongProductsSerializers(serializers.Serializer):
+    title = serializers.CharField()
+    cartProduct = serializers.IntegerField()
+    countOnStock = serializers.IntegerField()
+    id = serializers.IntegerField()
+
+
+class OrderSerializers(serializers.ModelSerializer):
 
     cart = CartSerializers()
 
