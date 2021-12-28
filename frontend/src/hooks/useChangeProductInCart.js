@@ -1,15 +1,14 @@
 export function useChangeProductInCart() {
     const updateFieldProductInCart = (obj, products, setProducts) => {
+        // check type products
         if(Array.isArray(products)){
-            let newProductsList = [...products],
-                idProductInList = newProductsList.indexOf(obj)
-            newProductsList[idProductInList].in_cart = true
-            setProducts(products => newProductsList)
+            let idProductInList = products.indexOf(obj)
+            products[idProductInList].in_cart = true
         }else{
-            let updateProduct = products
-            updateProduct.in_cart = true
-            setProducts(prev => updateProduct)
+            products.in_cart = true
         }
+
+        setProducts(prev => products)
     }
     return {
         updateFieldProductInCart

@@ -124,10 +124,12 @@ class ProductDetailSerializers(ModelSerializer):
             'count_on_stock',
         )
 
+    # for anonym
     def get_in_cart(self, obj):
         if self.context.get('request', None):
             user = self.context.get('request', None).user
             if user.is_authenticated:
+                # Q
                 cart = Cart.objects.filter(customer=user, in_order=False).first()
                 if cart and cart.products.filter(product=obj).exists():
                     return True

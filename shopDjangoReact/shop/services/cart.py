@@ -103,7 +103,7 @@ class AddProductToCartService(BaseCartService):
         cart_product, created = self._create_cart_product(cart, product)
         
         if created:
-            self.remove_product_from_pending(product)
+            # self.remove_product_from_pending(product)
             cart.products.add(cart_product)
             self.save_cart(cart)
         return created

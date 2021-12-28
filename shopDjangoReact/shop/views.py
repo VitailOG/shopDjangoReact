@@ -64,7 +64,6 @@ class CartAPI(ModelViewSet):
 
     @action(methods=['post'], detail=False, url_path='add-to-cart/(?P<pk>\d+)')
     def add_to_cart(self, *args, **kwargs):
-        print('--------')
         cart_product = AddProductToCartService(self.kwargs.get('pk'), self.request)()
         if cart_product:
             return Response(status=status.HTTP_201_CREATED)

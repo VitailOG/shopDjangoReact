@@ -2,10 +2,12 @@ import channels.layers
 
 from django.dispatch import receiver
 from django.db.models.signals import post_save, pre_save
+from django.core.cache import cache
 from asgiref.sync import async_to_sync
 
 from .models import ProductInPending, Product, Reminder
 from customer.models import Customer
+from .services.product import BaseProductService
 
 
 @receiver(post_save, sender=Customer)
@@ -22,13 +24,17 @@ def change_status_on_stock(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Product)
 def create_reminder(sender, instance, created, **kwargs):
+    if cache.get(instance.slug):
+        # cache.set(instance.slug, instance, timeout=settings.CACHE_TTL)
+        BaseProductService().set_to_cache(instance.slug, instance)
+
     if instance.count_on_stock != 0 and instance.status_on_stock:
         products_in_pending = ProductInPending.objects.filter(product=instance)
         
         for i in products_in_pending:
             Reminder.objects.create(customer=i.customer)
             layer = channels.layers.get_channel_layer()
-            
+
             async_to_sync(layer.group_send)(
                 f'user_{i.customer.username}',
                 {

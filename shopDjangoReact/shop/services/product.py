@@ -7,9 +7,9 @@ from ..models import RatingProduct, Product
 from ..utils import get_client_ip
 
 
-class BaseProductSevice:
+class BaseProductService:
     
-    def _set_to_cache(self, slug: str, obj: Product):
+    def set_to_cache(self, slug: str, obj: Product):
         cache.set(slug, obj, timeout=settings.CACHE_TTL)
         
     def _get_from_cache(self, slug: str):
@@ -18,7 +18,7 @@ class BaseProductSevice:
         return False
 
 
-class DetailProductService(BaseProductSevice):
+class DetailProductService(BaseProductService):
     
     def __init__(self, slug_or_id: Union[str, int]):
         self.slug_or_id = slug_or_id
@@ -27,7 +27,7 @@ class DetailProductService(BaseProductSevice):
         product = self._get_from_cache(self.slug_or_id)
         if not product:
             product = Product.objects.get_product_by_slug(slug=self.slug_or_id, related=True)
-            self._set_to_cache(self.slug_or_id, product)
+        self.set_to_cache(self.slug_or_id, product)
         return product
 
     def create_rating(self, request, value):

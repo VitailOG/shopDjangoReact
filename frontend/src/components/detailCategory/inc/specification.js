@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './autocomplete.css'
 import { useDispatch } from "react-redux";
 import {
     addSpecAction,
@@ -13,6 +11,9 @@ import {
 import { specificationNameProductsAPI, specificationProductsAPI } from "../../../http/api/product";
 import Price from "../inc/spec/price";
 import {nameSpec} from "../../../core/config";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './autocomplete.css'
 
 
 function Specification(props) {
