@@ -4,7 +4,7 @@ import { Form, Col, InputGroup, Image, Button, Spinner } from 'react-bootstrap';
 import { useLocation } from "react-router-dom";
 import { Formik } from "formik";
 import * as yup from 'yup';
-import { loginUrl } from '../router/urls'
+import {loginUrl} from '../router/urls'
 import image from '../../eye (3).png';
 import image2 from '../../eye (4).png';
 import '../../App.css';
@@ -14,9 +14,6 @@ import { useAuth } from "../../hooks/useAuth";
 
 function Login() {
     const [showPassword, setShowPassword] = useState(false)
-
-    const location = useLocation()
-    console.log(location)
 
     const auth = useAuth()
 

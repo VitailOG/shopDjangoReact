@@ -14,6 +14,7 @@ class BaseProductService:
         
     def _get_from_cache(self, slug: str):
         if slug in cache:
+            print('from cache')
             return cache.get(slug)
         return False
 
@@ -26,6 +27,7 @@ class DetailProductService(BaseProductService):
     def get_product(self):
         product = self._get_from_cache(self.slug_or_id)
         if not product:
+            print('from db')
             product = Product.objects.get_product_by_slug(slug=self.slug_or_id, related=True)
         self.set_to_cache(self.slug_or_id, product)
         return product

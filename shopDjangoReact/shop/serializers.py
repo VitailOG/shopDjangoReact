@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Q
 from django.utils import timezone
 from rest_framework.serializers import (
     ModelSerializer,
@@ -124,27 +124,34 @@ class ProductDetailSerializers(ModelSerializer):
             'count_on_stock',
         )
 
-    # for anonym
     def get_in_cart(self, obj):
         if self.context.get('request', None):
-            user = self.context.get('request', None).user
-            if user.is_authenticated:
-                # Q
-                cart = Cart.objects.filter(customer=user, in_order=False).first()
-                if cart and cart.products.filter(product=obj).exists():
-                    return True
-                return False
+
+            request = self.context.get('request', None)
+            user = getattr(request, 'user')
+
+            user_or_none = user if user.is_authenticated else None
+            user_ip = get_client_ip(request)
+
+            cart = Cart.objects.get_cart_by_customer_or_ip(user_or_none, user_ip)
+
+            if cart and cart.products.filter(product=obj).exists():
+                return True
+            return False
     
     def get_rating_value(self, obj):
         user = get_client_ip(self.context.get('request', None))
+
         agg_value = RatingProduct.objects.filter(product=obj).aggregate(Sum('value'), Count('id'))
         amount, count = agg_value['value__sum'], agg_value['id__count']
         user_exists_rating = RatingProduct.objects.filter(ip_address_user=user, product=obj)
+
         data = {
             "count": count,
             "all_rating": amount,
             "user_exists_rating": 0 if not user_exists_rating else getattr(user_exists_rating.first(), 'value')
         }
+
         res = ProductRatingSerializers(data).data
         return res
 

@@ -22,6 +22,7 @@ function DetailProduct({ match }) {
     useEffect(() => {
         productDetailAPI(productSlug).then(response => {
             setProduct(response)
+            localStorage.setItem('productSlug', response.slug)
 
             setCommonRatingProduct(response.rating_value.all_rating)
             setUserRating(response.rating_value.user_exists_rating)

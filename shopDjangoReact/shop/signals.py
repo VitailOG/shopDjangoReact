@@ -25,7 +25,6 @@ def change_status_on_stock(sender, instance, **kwargs):
 @receiver(post_save, sender=Product)
 def create_reminder(sender, instance, created, **kwargs):
     if cache.get(instance.slug):
-        # cache.set(instance.slug, instance, timeout=settings.CACHE_TTL)
         BaseProductService().set_to_cache(instance.slug, instance)
 
     if instance.count_on_stock != 0 and instance.status_on_stock:
