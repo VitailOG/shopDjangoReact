@@ -28,18 +28,20 @@ class CartManager(models.Manager):
         for_anonymos = self.get_queryset().get_cart_for_anonymous_customer(user_ip).first()
 
         if for_anonymos and for_anonymos.all_product:
-            qs.delete()
+
+            if qs:
+                qs.delete()
 
             for_anonymos.customer = customer
             for_anonymos.save()
 
             return for_anonymos
-        
+
         return qs
 
     def get_cart_by_customer_or_ip(self, user_or_none: None | Customer, user_ip: str):
-        return super().objects.filter(
-            Q(customer=user_or_none) |
-            Q(for_anonymous_user=user_ip),
+        return super().filter(
+            Q(for_anonymous_user=user_ip, customer__isnull=True) |
+            Q(customer=user_or_none),
             in_order=False
         ).first()

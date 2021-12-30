@@ -134,7 +134,7 @@ class ProductDetailSerializers(ModelSerializer):
             user_ip = get_client_ip(request)
 
             cart = Cart.objects.get_cart_by_customer_or_ip(user_or_none, user_ip)
-
+            print(cart)
             if cart and cart.products.filter(product=obj).exists():
                 return True
             return False

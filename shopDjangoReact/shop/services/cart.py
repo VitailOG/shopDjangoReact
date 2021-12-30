@@ -92,10 +92,10 @@ class AddProductToCartService(BaseCartService):
     def _get_product(self, id: int) -> Product:
         return Product.objects.get_product_by_id(id)
 
-    def remove_product_from_pending(self, product):
-        pending = ProductInPending.objects.get(customer=self.customer)
-        if pending.product.filter(id=product.id).exists():
-            pending.product.remove(product)
+    # def remove_product_from_pending(self, product):
+    #     pending = ProductInPending.objects.get(customer=self.customer)
+    #     if pending.product.filter(id=product.id).exists():
+    #         pending.product.remove(product)
 
     def add_product_to_cart(self):
         cart = self.get_customer_cart()
