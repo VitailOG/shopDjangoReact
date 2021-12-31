@@ -17,10 +17,13 @@ export function specificationProductsAPI(slug) {
     }).then(response => response.data)
 }
 
-export function specificationNameProductsAPI(slug) {
+export function specificationNameProductsAPI(slug, search) {
     return $axios({
-        method: "GET",
-        url: `/shop/specification/name/${slug}/`
+        method: "POST",
+        url: `/shop/specification/name/${slug}/`,
+        data: {
+            search: search
+        }
     }).then(response => response.data)
 }
 

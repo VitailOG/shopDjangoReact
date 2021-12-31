@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Cart from "../home/inc/cart";
 import Paginator from "./inc/paginator";
@@ -14,7 +14,7 @@ import SpecsList from "./inc/specsList";
 import SelectsForFilters from "./inc/selectsForFilters";
 import CartLoader from "../home/inc/cartLoader";
 
-function DetailCategory({ match }) {
+function DetailCategory({ match, fetchProductDetail }) {
 
     const slug = match.params.slug;
 
@@ -51,6 +51,10 @@ function DetailCategory({ match }) {
     let addInPending = (slug_product) => {
         addProductInPending.addInPending(slug_product)
     }
+
+    let fetchProduct = useCallback((slug) =>{
+        fetchProductDetail(slug)
+    }, [fetchProductDetail])
 
     let setLimit = (limit) => {
         dispatch(limitAction(limit))
@@ -121,6 +125,7 @@ function DetailCategory({ match }) {
                                                           addToCart={addToCart}
                                                           idProduct={addProductToCartCustomer.idProduct}
                                                           addInPending={addInPending}
+                                                          fetchProduct={fetchProduct}
                                                     />
                                                 ))
                                                 :

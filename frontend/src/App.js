@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
@@ -21,21 +21,32 @@ import EmailLetter from "./components/registration/emailLetter"
 import LoadingBar from "react-top-loading-bar";
 import { IsAuth } from "./hoc/IsAuth"
 import {useSelector} from "react-redux";
+import {useFetchDetailProduct} from "./hooks/useFetchDetailProduct";
 
 
 function App() {
     const username = useSelector(state => state.auth.username)
-    const ref = useRef(null);
+
     const socket = useRef();
+
+    // const [product, setProduct] = useState({})
 
     socket.current = new WebSocket(`ws://127.0.0.1:8000/${username}/?token=${localStorage.getItem('token')}`)
 
+    const ref = useRef();
+    const {fetchProductDetail, product, setProduct} = useFetchDetailProduct(ref)
+
+    console.log(product.rating_value)
+    let finishFetch = () =>{
+        ref.current.complete()
+    }
+
     return (
         <div className="wrapper">
-            {/* https://codesandbox.io/s/react-loading-forked-nr9uf?file=/src/Menu.js */}
-            <Router>
+             {/*https://codesandbox.io/s/react-loading-forked-nr9uf?file=/src/Menu.js */}
                 <Navbar socket={socket.current}/>
-                <LoadingBar color="#f11946" ref={ref} />
+                <LoadingBar color="#808080" ref={ref} height={3}/>
+
                 <Switch>
                     {/*Private route*/}
                     <Route path="/profile/" render={() =>
@@ -56,18 +67,27 @@ function App() {
                         </IsAuth>
                     } />
 
-                    <Route path="/" exact render={() => <Home />} />
+                    <Route path="/" exact render={() => <Home fetchProductDetail={fetchProductDetail}/>} />
+
                     <Route path="/category/:slug" exact
-                        render={({ match }) => <DetailCategory match={match} />} />
+                        render={({ match }) =>
+                            <DetailCategory
+                                match={match}
+                                fetchProductDetail={fetchProductDetail}
+                            />}
+                    />
 
                     <Route path="/cart/" render={() => <Basket />} />
 
-                    {/*<Route path="/profile/" exact render={() => <Profile />} />*/}
-                    {/*<Route path="/in-pending/" exact render={() => <InPending />} />*/}
-                    {/*<Route path="/order/" exact render={() => <Order />} />*/}
-
                     <Route path={["/product/:slug", "/specification/:slug"]} exact
-                        render={({ match }) => <DetailProduct match={match} />} />
+                        render={({ match }) =>
+                            <DetailProduct
+                                match={match}
+                                product={product}
+                                setProduct={setProduct}
+                                finishFetch={finishFetch}
+                            />}
+                    />
 
                     <Route path="/review/:id" exact render={() => <ReviewProduct />} />
 
@@ -78,7 +98,6 @@ function App() {
 
                 </Switch>
                 <Footer />
-            </Router>
         </div>
     );
 }

@@ -124,7 +124,7 @@ class ProductDetailSerializers(ModelSerializer):
             'count_on_stock',
         )
 
-    def get_in_cart(self, obj):
+    def get_in_cart(self, obj) -> bool:
         if self.context.get('request', None):
 
             request = self.context.get('request', None)
@@ -134,12 +134,12 @@ class ProductDetailSerializers(ModelSerializer):
             user_ip = get_client_ip(request)
 
             cart = Cart.objects.get_cart_by_customer_or_ip(user_or_none, user_ip)
-            print(cart)
+
             if cart and cart.products.filter(product=obj).exists():
                 return True
             return False
     
-    def get_rating_value(self, obj):
+    def get_rating_value(self, obj) -> dict:
         user = get_client_ip(self.context.get('request', None))
 
         agg_value = RatingProduct.objects.filter(product=obj).aggregate(Sum('value'), Count('id'))
@@ -148,7 +148,7 @@ class ProductDetailSerializers(ModelSerializer):
 
         data = {
             "count": count,
-            "all_rating": amount,
+            "all_rating": 0 if amount is None else amount,
             "user_exists_rating": 0 if not user_exists_rating else getattr(user_exists_rating.first(), 'value')
         }
 
@@ -175,7 +175,7 @@ class ProductListSerializers(ModelSerializer):
             'new_product'
         )
 
-    def get_new_product(self, obj):
+    def get_new_product(self, obj) -> bool:
         return obj.date >= (timezone.now() - datetime.timedelta(days=1))
 
 

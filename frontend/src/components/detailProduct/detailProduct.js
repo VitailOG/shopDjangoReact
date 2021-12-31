@@ -4,14 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import SpecificationProduct from "./specificationProduct";
 import NavBar from "./inc/nav";
 import Main from "./main";
-import { productDetailAPI } from "../../http/api/product";
 
 
-function DetailProduct({ match }) {
+function DetailProduct({ match, product, setProduct, finishFetch }) {
 
     const location = useLocation()
-
-    const [product, setProduct] = useState({})
 
     const [commonRatingProduct, setCommonRatingProduct] = useState(0)
     const [countRating, setCountRating] = useState(0)
@@ -19,16 +16,15 @@ function DetailProduct({ match }) {
 
     const productSlug = match.params.slug;
 
-    useEffect(() => {
-        productDetailAPI(productSlug).then(response => {
-            setProduct(response)
-            localStorage.setItem('productSlug', response.slug)
+    useEffect(() =>{
+        setCommonRatingProduct(product.rating_value.all_rating)
+        setCountRating(product.rating_value.count)
+        setUserRating(product.rating_value.user_exists_rating)
+    }, [product])
 
-            setCommonRatingProduct(response.rating_value.all_rating)
-            setUserRating(response.rating_value.user_exists_rating)
-            setCountRating(response.rating_value.count)
-        })
-    }, [productSlug]);
+    useEffect(() =>{
+        finishFetch()
+    }, [])
 
     return (
         <div className="container mt-5">

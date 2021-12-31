@@ -37,7 +37,6 @@ from .services.cart import (
     ChangeCountProductInCartService
 )
 from .services.product import DetailProductService
-from .services.pending import correct_products_on_pending
 from .filters import ProductFilter
 from .utils import check_exists_product_in_cart
 
@@ -65,8 +64,10 @@ class CartAPI(ModelViewSet):
     @action(methods=['post'], detail=False, url_path='add-to-cart/(?P<pk>\d+)')
     def add_to_cart(self, *args, **kwargs):
         cart_product = AddProductToCartService(self.kwargs.get('pk'), self.request)()
+
         if cart_product:
             return Response(status=status.HTTP_201_CREATED)
+
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['post'], detail=False, url_path='delete-from-cart/(?P<pk>\d+)')
@@ -76,9 +77,15 @@ class CartAPI(ModelViewSet):
 
     @action(methods=['patch'], detail=False, url_path='change-count-cart-product/(?P<cp>\d+)/(?P<count>\d+)')
     def change_count_cart_product(self, *args, **kwargs):
-        change_count_product_in_cart = ChangeCountProductInCartService(self.kwargs.get('cp'), self.kwargs.get('count'), self.request)()
+        change_count_product_in_cart = ChangeCountProductInCartService(
+            self.kwargs.get('cp'),
+            self.kwargs.get('count'),
+            self.request
+        )()
+
         if not change_count_product_in_cart:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
+
         return Response(status=status.HTTP_200_OK)
 
 
@@ -103,8 +110,10 @@ class ProductAPI(ModelViewSet):
     @action(['get'], detail=False, url_path='category/(?P<c>\S+)')
     def category_products(self, *args, **kwargs):
         products = Product.objects.get_products_by_category(self.kwargs.get('c'))
+
         queryset = self.filter_queryset(products)
         pagination_queryset = self.paginate_queryset(queryset)
+
         data = ProductListSerializers(pagination_queryset, many=True).data
         check_exists_product_in_cart(self.request, data)
         return self.get_paginated_response(data)
@@ -117,7 +126,9 @@ class ProductAPI(ModelViewSet):
     @action(['post'], detail=False, url_path='create-rating/(?P<id_product>\d+)')
     def create_or_update_rating_for_product(self, *args, **kwargs):
         value = self.request.data.get('value')
+
         created = DetailProductService(self.kwargs.get('id_product')).create_rating(self.request, value)
+
         if created:
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -154,8 +165,7 @@ class InPendingAPI(ModelViewSet):
     @action(methods=['get'], detail=False)
     def get_products_in_pending_customer(self, *args, **kwargs):
         products_in_pending = ProductInPending.objects.get_products_in_pending(self.request.user)
-        correct_data = correct_products_on_pending(products_in_pending, self.request)
-        data = InPendingSerializers(correct_data).data
+        data = InPendingSerializers(products_in_pending).data
         return Response(data)
 
     @action(methods=['post'], detail=False, url_path='product-in-pending/(?P<c>\S+)')
@@ -182,9 +192,15 @@ class SpecificationValueAPI(ReadOnlyModelViewSet):
         data = SpecificationSerializers(list_unique_specification, many=True).data
         return Response(data)
 
-    @action(['get'], detail=False, url_path='name/(?P<slug>\S+)')
+    @action(['post'], detail=False, url_path='name/(?P<slug>\S+)')
     def get_products_name(self, *args, **kwargs):
-        products = Product.objects.filter(category__slug=self.kwargs.get('slug'))
+        search = self.request.data.get('search')
+
+        products = Product.objects.filter(
+            category__slug=self.kwargs.get('slug'),
+            title__icontains=search
+        )
+
         data = ProductWithoutCategorySerializers(products, many=True).data
         return Response(data)
 

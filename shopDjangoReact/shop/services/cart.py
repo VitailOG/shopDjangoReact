@@ -1,8 +1,7 @@
-from typing import Optional, Tuple
+from typing import Tuple
 
 from django.db.models import Sum
 from rest_framework import status
-
 from rest_framework.response import Response
 
 from shop.models import (
@@ -11,6 +10,7 @@ from shop.models import (
     CartProduct,
     ProductInPending
 )
+from ..utils import is_auth
 
 
 class BaseCartService:
@@ -22,10 +22,11 @@ class BaseCartService:
         self.customer = getattr(request, 'user')
     
     @staticmethod
-    def _get_cart_product(id: int, count=None):
+    def _get_cart_product(id: int, count=None) -> CartProduct:
         return CartProduct.objects.get_or_update_cart_product_by_id(id, count)
-    
-    def save_cart(self, cart):
+
+    @staticmethod
+    def save_cart(cart: Cart) -> None:
         cart_product = cart.related_products.aggregate(Sum('all_price'))['all_price__sum']
         count = cart.related_products.aggregate(Sum('count'))['count__sum']
         if cart_product:
@@ -45,7 +46,7 @@ class BaseCartService:
         cart.all_product = count
         cart.save()
         
-    def get_customer_cart(self) -> Optional[Cart]:
+    def get_customer_cart(self) -> Cart:
         
         from ..utils import get_client_ip         
         user_ip = get_client_ip(self.request)
@@ -59,10 +60,10 @@ class BaseCartService:
         
         # for anonymous customer        
         cart = Cart.objects.all().get_cart_for_anonymous_customer(user_ip)        
-        
+
         if not cart:
             return Cart.objects.create(for_anonymous_user=user_ip)
-        
+
         return cart.first()
     
     def get_only_present_products_on_stock(self) -> Cart:
@@ -92,18 +93,19 @@ class AddProductToCartService(BaseCartService):
     def _get_product(self, id: int) -> Product:
         return Product.objects.get_product_by_id(id)
 
-    # def remove_product_from_pending(self, product):
-    #     pending = ProductInPending.objects.get(customer=self.customer)
-    #     if pending.product.filter(id=product.id).exists():
-    #         pending.product.remove(product)
+    @is_auth
+    def remove_product_from_pending(self, product):
+        pending = ProductInPending.objects.get(customer=self.customer)
+        if pending.product.filter(id=product.id).exists():
+            pending.product.remove(product)
 
     def add_product_to_cart(self):
         cart = self.get_customer_cart()
         product = self._get_product(self.product_id)
         cart_product, created = self._create_cart_product(cart, product)
-        
+
         if created:
-            # self.remove_product_from_pending(product)
+            self.remove_product_from_pending(product)
             cart.products.add(cart_product)
             self.save_cart(cart)
         return created
@@ -150,7 +152,7 @@ class ChangeCountProductInCartService(BaseCartService):
             return False
         return True
         
-    def change_count_product_in_cart(self) -> None:
+    def change_count_product_in_cart(self) -> bool:
         validate_count = self.validate_count_cart_product()
         cart = self.get_customer_cart()
 

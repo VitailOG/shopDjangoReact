@@ -2,7 +2,6 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import useSWR, { mutate } from "swr";
 import {cartCustomer} from "../../router/urls";
-import $axios from "../../../http";
 import {getCartProductAPI} from "../../../http/api/cart";
 
 

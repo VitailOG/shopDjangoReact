@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from "react-redux";
+import {useHistory} from "react-router-dom";
 
 import Cart from "./inc/cart";
 import HeaderContent from "./inc/headerContent";
-import CartLoader from "./inc/cartLoader"
+import CartLoader from "./inc/cartLoader";
 
-import { productOnHomePageAPI } from "../../http/api/product";
+import {productDetailAPI, productOnHomePageAPI} from "../../http/api/product";
 import { useAddProductToCart } from "../../hooks/useAddProductToCart";
 import { useAddInPending } from "../../hooks/useAddProductInPending";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import withRouter from "react-router-dom/es/withRouter";
 
 
-function Home() {
+function Home({fetchProductDetail}) {
 
     const [products, setProducts] = useState([])
     const [load, setLoad] = useState(null)
@@ -38,6 +40,10 @@ function Home() {
         addProductInPending.addInPending(slug_product)
     }
 
+    let fetchProduct = useCallback((slug) =>{
+        fetchProductDetail(slug)
+    }, [fetchProductDetail])
+
     return (
         <div className="App">
             <HeaderContent />
@@ -60,6 +66,7 @@ function Home() {
                                         addInPending={addInPending}
                                         idProduct={addProductToCartCustomer.idProduct}
                                         load={load}
+                                        fetchProduct={fetchProduct}
                                     />
                                 ))}
                             </>

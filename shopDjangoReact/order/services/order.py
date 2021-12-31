@@ -29,8 +29,8 @@ class CreateOrderService:
         return self._create_order()
 
     @staticmethod
-    def _validate(cart: Cart):
-        """ return False if is incorrect product in cart 
+    def _validate(cart: Cart) -> bool | list[dict]:
+        """ return List[Product] if is incorrect product in cart
         """
         error = []
         for product in cart.products.all():
@@ -49,7 +49,7 @@ class CreateOrderService:
             return error
         return False
             
-    def _create_order(self) -> None:
+    def _create_order(self) -> Response:
         correct_cart = self._validate(self.cart)
         
         if isinstance(correct_cart, list):
@@ -78,7 +78,7 @@ class CreateOrderService:
         self.cart.save()
         return Response({'success': True}, status=status.HTTP_201_CREATED)
     
-    def _add_promo_code_to_order(self, order: Order) -> None:
+    def _add_promo_code_to_order(self, order: Order) -> bool:
         promo_code = PromoCode.objects.filter(name=self.promo_code_value)
         if not promo_code.first() or \
            not promo_code.first().end_of_action > timezone.now():

@@ -19,12 +19,20 @@ function Main({
     let changeRating = (rating) => {
         createRatingAPI(product.id, { value: rating }).then(res => {
             if (res.status === 201) {
-                setCountRating(prev => countRating + 1)
-                setCommonRatingProduct(prev => commonRatingProduct + rating)
-                setUserRating(prev => rating)
+                setProduct({...product, rating_value: {
+                        count: product.rating_value.count + 1,
+                        all_rating: product.rating_value.all_rating + rating,
+                        user_exists_rating: rating
+                    }
+                })
+
             } else if (res.status === 204) {
-                setCommonRatingProduct(prev => (commonRatingProduct - userRating) + rating)
-                setUserRating(prev => rating)
+                setProduct({...product, rating_value: {
+                        ...product.rating_value,
+                        all_rating: (product.rating_value.all_rating - product.rating_value.user_exists_rating) + rating,
+                        user_exists_rating: rating
+                    }
+                })
             }
         }).catch(e => {
             console.log('error')
@@ -57,53 +65,5 @@ function Main({
         </>
     );
 }
-
-// export default Main;
-
-
-// import React, { useMemo } from 'react';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import CarouselImage from "./inc/carousel"
-// import InfoProduct from "./inc/infoProduct"
-// import {createRatingAPI} from "../../http/api/product";
-
-// function Main(props) {
-//
-//     let changeRating = (rating) => {
-//         createRatingAPI(props.productId, { value: rating }).then(res => {
-//             if (res.status === 201) {
-//                 props.setCountRating(prev => props.countRating + 1)
-//                 props.setCommonRatingProduct(prev => props.commonRatingProduct + rating)
-//                 props.setUserRating(prev => rating)
-//             } else if (res.status === 204) {
-//                 props.setCommonRatingProduct(prev => (props.commonRatingProduct - props.userRating) + rating)
-//                 props.setUserRating(prev => rating)
-//             }
-//         }).catch(e => {
-//             console.log('error')
-//         })
-//     }
-//
-//     let ratingProduct = useMemo(() => {
-//         return props.commonRatingProduct / props.countRating
-//     }, [props.commonRatingProduct, props.countRating])
-//
-//     return (
-//         <div className="App">
-//             <div className="row mt-5">
-//                 <div className="col-5">
-//                     <CarouselImage productImg={props.productImg} />
-//                 </div>
-//
-//                 <div className="col-6">
-//                     <InfoProduct changeRating={changeRating}
-//                                  ratingProduct={ratingProduct}
-//                                  product={props.product}
-//                     />
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
 
 export default Main;

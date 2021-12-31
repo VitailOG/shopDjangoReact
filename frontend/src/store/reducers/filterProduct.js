@@ -1,4 +1,14 @@
-import {LIMIT, OFFSET, SORT, SEARCH, MIN_PRICE, MAX_PRICE, REMOVE_SPEC, ADD_SPEC, CLEAR_SPEC} from "../actions";
+import {
+    LIMIT,
+    OFFSET,
+    SORT,
+    SEARCH,
+    MIN_PRICE,
+    MAX_PRICE,
+    REMOVE_SPEC,
+    ADD_SPEC,
+    CLEAR_SPEC
+} from "../actions";
 
 const initialState = {
     limit: 3,

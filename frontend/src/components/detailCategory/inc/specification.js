@@ -13,13 +13,16 @@ import Price from "../inc/spec/price";
 import {nameSpec} from "../../../core/config";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './autocomplete.css'
+import './autocomplete.css';
+import LoaderProduct from "../../home/inc/loaderProduct";
 
 
 function Specification(props) {
 
     const [specification, setSpecification] = useState([])
+
     const [nameProducts, setNameProducts] = useState([])
+    const [loadProductsName, setLoadProductsName] = useState(false)
 
     const [search, setSearch] = useState(props.search)
     const [minPrice, setMinPrice] = useState(props.minPrice)
@@ -28,6 +31,8 @@ function Specification(props) {
     const [autoCompleteActive, setAutoCompleteActive] = useState(false)
 
     const dispatch = useDispatch()
+
+    const correctSearch = search.trim().length > 3
 
     let addOrRemoveSpecification = (value) => {
         if (props.data.indexOf(value) !== -1) {
@@ -40,10 +45,14 @@ function Specification(props) {
     }
 
     useEffect(() => {
-        specificationNameProductsAPI(props.slug).then(response => {
-            setNameProducts(response)
-        })
-    }, [props.slug]);
+        if (correctSearch){
+            setLoadProductsName(true)
+            specificationNameProductsAPI(props.slug, search).then(response => {
+                setNameProducts(response)
+                setLoadProductsName(false)
+            })
+        }
+    }, [search]);
 
     useEffect(() => {
         specificationProductsAPI(props.slug).then(response => {
@@ -71,10 +80,6 @@ function Specification(props) {
         setAutoCompleteActive(false)
     }
 
-    let filterNameProduct = nameProducts.filter(name => {
-        return name.title.toLowerCase().includes(search.toLowerCase())
-    })
-
     return (
         <div className="App">
 
@@ -99,19 +104,34 @@ function Specification(props) {
                     </div>
 
                     {
-                        autoCompleteActive && search ?
-                            <>
-                                <ul className="autocomplete">
-                                    {filterNameProduct.map(e => (
-                                        <li className="autocomplete__item" key={e}
-                                            onClick={event => choiceProduct(event.target.textContent)}
-                                        >{e.title}</li>
-                                    ))}
-                                </ul>
+                         correctSearch && autoCompleteActive ?
+                             <>
+                                 {
+                                     !loadProductsName ?
+
+                                         nameProducts.length > 0 ?
+                                             <ul className="autocomplete">
+                                                {nameProducts.map(e => (
+                                                    <li className="autocomplete__item" key={e}
+                                                        onClick={event => choiceProduct(event.target.textContent)}
+                                                    >{e.title}</li>
+                                                ))}
+                                            </ul>
+                                             :
+
+                                             <ul className="autocomplete">
+                                                <li style={{ padding: '10px' }}>Товарів не знайдено {search}</li>
+                                             </ul>
+
+                                         :
+                                         <ul className="autocomplete">
+                                             <LoaderProduct/>
+                                        </ul>
+                                 }
                             </>
                             :
                             ""
-                    }
+                     }
 
 
                 </form>
@@ -285,22 +305,6 @@ function Specification(props) {
                        setMaxPrice={setMaxPrice}
                 />
 
-                {/*<div className="col-md-6">*/}
-                {/*    <input type="number"*/}
-                {/*        placeholder="Від"*/}
-                {/*        className="form-control mt-3" min={minPrice} value={minPrice}*/}
-                {/*        onChange={event => setMinPrice(event.target.value)}*/}
-                {/*    />*/}
-                {/*    <input type="number"*/}
-                {/*        placeholder="До"*/}
-                {/*        className="form-control mt-1" max={maxPrice} value={maxPrice}*/}
-                {/*        onChange={event => setMaxPrice(event.target.value)}*/}
-                {/*    />*/}
-                {/*    <button type="button"*/}
-                {/*        className="btn btn-primary mt-2"*/}
-                {/*        onClick={() => setPrice()}*/}
-                {/*    >Встановити ціну</button>*/}
-                {/*</div>*/}
             </div>
         </div>
     );

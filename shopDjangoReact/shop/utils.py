@@ -1,7 +1,6 @@
-from .services.cart import BaseCartService
-
-
 def check_product_in_cart(request):
+    from .services.cart import BaseCartService
+
     cart = BaseCartService(request).get_customer_cart()
     return [i.product.id for i in cart.products.all()]
 
@@ -19,3 +18,11 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
+def is_auth(func):
+    def inner(*args, **kwargs):
+        is_user_auth = args[0].customer.is_authenticated
+        if is_user_auth:
+            return func(*args, **kwargs)
+    return inner

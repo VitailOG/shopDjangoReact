@@ -1,7 +1,6 @@
-import React, { useRef } from 'react';
-import { Link } from "react-router-dom";
-
+import React from 'react';
 import CustomButton from './button'
+import LoaderProduct from "./loaderProduct";
 
 
 function Cart(props) {
@@ -17,16 +16,17 @@ function Cart(props) {
                                 style={{ 'top': '0.5rem', 'right': '0.5rem' }}>NEW</div>
                             : ""
                     }
-                    <Link to={{ pathname: `/product/${props.data.slug}`, fromDashboard: false }}
-                        style={{ 'textDecoration': 'none', 'color': 'black' }}>
+                    <div onClick={() => props.fetchProduct(props.data.slug)} style={{ cursor: "pointer" }}>
                         <img className="card-img-top" src={props.data.main_img} alt="..." />
+
                         <div className="card-body p-4">
                             <div className="text-center">
                                 <h5 className="fw-bolder">{props.data.title}</h5>
                                 {props.data.price} грн.
                             </div>
                         </div>
-                    </Link>
+                    </div>
+
                     <div className="card-footer p-4 pt-0 border-top-0 bg-transparent">
                         <div className="text-center">
 
