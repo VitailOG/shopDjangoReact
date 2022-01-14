@@ -172,7 +172,7 @@ class ProductListSerializers(ModelSerializer):
             'price',
             'main_img',
             'count_on_stock',
-            'new_product'
+            'new_product',
         )
 
     def get_new_product(self, obj) -> bool:

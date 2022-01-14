@@ -1,5 +1,5 @@
 def check_product_in_cart(request):
-    from .services.cart import BaseCartService
+    from .services.cart.base import BaseCartService
 
     cart = BaseCartService(request).get_customer_cart()
     return [i.product.id for i in cart.products.all()]

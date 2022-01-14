@@ -7,7 +7,7 @@ from customer.models import Customer
 from order.models import Order, PromoCode
 from order.serializers import WrongProductsSerializers
 from shop.models import Cart
-from shop.services.cart import BaseCartService
+from shop.services.cart.base import BaseCartService
 
 
 class CreateOrderService:
@@ -79,15 +79,14 @@ class CreateOrderService:
         return Response({'success': True}, status=status.HTTP_201_CREATED)
     
     def _add_promo_code_to_order(self, order: Order) -> bool:
-        promo_code = PromoCode.objects.filter(name=self.promo_code_value)
-        if not promo_code.first() or \
-           not promo_code.first().end_of_action > timezone.now():
+        promo_code = PromoCode.objects.filter(name=self.promo_code_value).first()
+        if not promo_code or not promo_code.end_of_action > timezone.now():
             return False
 
         price = 'discount' if self.cart.discount != 0.00 else 'all_price'
-        price_with_promo_code = self.choice_price[price] - self.choice_price[price] * promo_code.first().interest / 100
+        price_with_promo_code = self.choice_price[price] - self.choice_price[price] * promo_code.interest / 100
 
-        order.promo_code = promo_code.first()
+        order.promo_code = promo_code
         order.price_with_promo_code = price_with_promo_code
         return True
         

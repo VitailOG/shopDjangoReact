@@ -29,14 +29,11 @@ function App() {
 
     const socket = useRef();
 
-    // const [product, setProduct] = useState({})
-
     socket.current = new WebSocket(`ws://127.0.0.1:8000/${username}/?token=${localStorage.getItem('token')}`)
 
     const ref = useRef();
     const {fetchProductDetail, product, setProduct} = useFetchDetailProduct(ref)
 
-    console.log(product.rating_value)
     let finishFetch = () =>{
         ref.current.complete()
     }

@@ -2,25 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="73361db5-c140-4c68-8ca0-d68efdad9900" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/hooks/useFetchDetailProduct.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart/add.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart/base.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart/change_count.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart/delete.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/detailCategory/detailCategory.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailCategory/detailCategory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/detailCategory/inc/specification.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailCategory/inc/specification.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/detailProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/detailProduct.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/inc/nav.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/inc/nav.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/detailProduct/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/detailProduct/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/home/home.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/home/inc/cart.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/home/inc/cart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/navigation/inc/cartNavbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/navigation/inc/cartNavbar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/http/api/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/http/api/product.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/reducers/filterProduct.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/reducers/filterProduct.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/profile/profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/profile/profile.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../shopDjangoReact/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/order/services/order.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/order/services/order.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/services/cart.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/services/pending.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/utils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../shopDjangoReact/shop/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/../shopDjangoReact/shop/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,7 +77,10 @@
       <workItem from="1640880932456" duration="9019000" />
       <workItem from="1640900437738" duration="2704000" />
       <workItem from="1640951316183" duration="5203000" />
-      <workItem from="1640964723257" duration="4558000" />
+      <workItem from="1640964723257" duration="4982000" />
+      <workItem from="1641042720380" duration="1390000" />
+      <workItem from="1641141246741" duration="97000" />
+      <workItem from="1642173509207" duration="711000" />
     </task>
     <servers />
   </component>
